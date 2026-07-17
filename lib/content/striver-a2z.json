@@ -1275,84 +1275,84 @@
               "name": "Generate all binary strings",
               "leetcode": "",
               "gfg": "https://www.geeksforgeeks.org/problems/generate-all-binary-strings/1",
-              "youtube": "https://www.youtube.com/watch?v=yVdKa8dnKiE"
+              "youtube": "https://www.youtube.com/watch?v=AxNNVECce8c"
             },
             {
               "id": "162",
               "name": "Generate Parentheses",
               "leetcode": "https://leetcode.com/problems/generate-parentheses/",
               "gfg": "",
-              "youtube": "https://www.youtube.com/watch?v=yVdKa8dnKiE"
+              "youtube": "https://www.youtube.com/watch?v=AxNNVECce8c"
             },
             {
               "id": "163",
               "name": "Print all subsequences/Power Set",
               "leetcode": "https://leetcode.com/problems/subsets/",
               "gfg": "",
-              "youtube": "https://www.youtube.com/watch?v=yVdKa8dnKiE"
+              "youtube": "https://www.youtube.com/watch?v=AxNNVECce8c"
             },
             {
               "id": "164",
               "name": "Learn All Patterns of Subsequences (Theory)",
               "leetcode": "",
               "gfg": "https://www.geeksforgeeks.org/print-subsequences-string/",
-              "youtube": "https://www.youtube.com/watch?v=yVdKa8dnKiE"
+              "youtube": "https://www.youtube.com/watch?v=eQCS_v3bw0Q"
             },
             {
               "id": "165",
               "name": "Count all subsequences with sum K",
               "leetcode": "",
               "gfg": "https://www.geeksforgeeks.org/problems/perfect-sum-problem5633/1",
-              "youtube": "https://www.youtube.com/watch?v=yVdKa8dnKiE"
+              "youtube": "https://www.youtube.com/watch?v=AxNNVECce8c"
             },
             {
               "id": "166",
               "name": "Check if there exists a subsequence with sum K",
               "leetcode": "",
               "gfg": "https://www.geeksforgeeks.org/problems/subset-sum-problem-1611555638/1",
-              "youtube": "https://www.youtube.com/watch?v=yVdKa8dnKiE"
+              "youtube": "https://www.youtube.com/watch?v=AxNNVECce8c"
             },
             {
               "id": "167",
               "name": "Combination Sum",
               "leetcode": "https://leetcode.com/problems/combination-sum/",
               "gfg": "",
-              "youtube": "https://www.youtube.com/watch?v=yVdKa8dnKiE"
+              "youtube": "https://www.youtube.com/watch?v=OyZFFqQtu98"
             },
             {
               "id": "168",
               "name": "Combination Sum II",
               "leetcode": "https://leetcode.com/problems/combination-sum-ii/",
               "gfg": "",
-              "youtube": "https://www.youtube.com/watch?v=yVdKa8dnKiE"
+              "youtube": "https://www.youtube.com/watch?v=G1fRTGRxXU8"
             },
             {
               "id": "169",
               "name": "Subset Sum I",
               "leetcode": "",
               "gfg": "https://www.geeksforgeeks.org/problems/subset-sums2234/1",
-              "youtube": "https://www.youtube.com/watch?v=yVdKa8dnKiE"
+              "youtube": "https://www.youtube.com/watch?v=rYkfBRtMJr8"
             },
             {
               "id": "170",
               "name": "Subset Sum II",
               "leetcode": "https://leetcode.com/problems/subsets-ii/",
               "gfg": "",
-              "youtube": "https://www.youtube.com/watch?v=yVdKa8dnKiE"
+              "youtube": "https://www.youtube.com/watch?v=RIn3gOkbhQE"
             },
             {
               "id": "171",
               "name": "Combination Sum III",
               "leetcode": "https://leetcode.com/problems/combination-sum-iii/",
               "gfg": "",
-              "youtube": "https://www.youtube.com/watch?v=yVdKa8dnKiE"
+              "youtube": "https://www.youtube.com/watch?v=OyZFFqQtu98"
             },
             {
               "id": "172",
               "name": "Letter Combinations of a Phone number",
               "leetcode": "https://leetcode.com/problems/letter-combinations-of-a-phone-number/",
               "gfg": "",
-              "youtube": "https://www.youtube.com/watch?v=yVdKa8dnKiE"
+              "youtube": "https://www.youtube.com/watch?v=OyZFFqQtu98"
             }
           ]
         },
@@ -1364,56 +1364,56 @@
               "name": "Palindrome Partitioning",
               "leetcode": "https://leetcode.com/problems/palindrome-partitioning/",
               "gfg": "",
-              "youtube": "https://www.youtube.com/watch?v=yVdKa8dnKiE"
+              "youtube": "https://www.youtube.com/watch?v=WBgsABoClE0"
             },
             {
               "id": "174",
               "name": "Word Search",
               "leetcode": "https://leetcode.com/problems/word-search/",
               "gfg": "",
-              "youtube": "https://www.youtube.com/watch?v=yVdKa8dnKiE"
+              "youtube": "https://www.youtube.com/watch?v=WBgsABoClE0"
             },
             {
               "id": "175",
               "name": "N Queen",
               "leetcode": "https://leetcode.com/problems/n-queens/",
               "gfg": "",
-              "youtube": "https://www.youtube.com/watch?v=yVdKa8dnKiE"
+              "youtube": "https://www.youtube.com/watch?v=i05Ju7AftcM"
             },
             {
               "id": "176",
               "name": "Rat in a Maze",
               "leetcode": "",
               "gfg": "https://www.geeksforgeeks.org/problems/rat-in-a-maze-problem/1",
-              "youtube": "https://www.youtube.com/watch?v=yVdKa8dnKiE"
+              "youtube": "https://www.youtube.com/watch?v=bLGZhJlt4y0"
             },
             {
               "id": "177",
               "name": "Word Break",
               "leetcode": "https://leetcode.com/problems/word-break/",
               "gfg": "",
-              "youtube": "https://www.youtube.com/watch?v=yVdKa8dnKiE"
+              "youtube": "https://www.youtube.com/watch?v=bLGZhJlt4y0"
             },
             {
               "id": "178",
               "name": "M Coloring Problem",
               "leetcode": "",
               "gfg": "https://www.geeksforgeeks.org/problems/m-coloring-problem-1587115620/1",
-              "youtube": "https://www.youtube.com/watch?v=yVdKa8dnKiE"
+              "youtube": "https://www.youtube.com/watch?v=wuVwUK25Rfc"
             },
             {
               "id": "179",
               "name": "Sudoku Solver",
               "leetcode": "https://leetcode.com/problems/sudoku-solver/",
               "gfg": "",
-              "youtube": "https://www.youtube.com/watch?v=yVdKa8dnKiE"
+              "youtube": "https://www.youtube.com/watch?v=FWAIf_EVUKE"
             },
             {
               "id": "180",
               "name": "Expression Add Operators",
               "leetcode": "https://leetcode.com/problems/expression-add-operators/",
               "gfg": "",
-              "youtube": "https://www.youtube.com/watch?v=yVdKa8dnKiE"
+              "youtube": "https://www.youtube.com/watch?v=FWAIf_EVUKE"
             }
           ]
         }

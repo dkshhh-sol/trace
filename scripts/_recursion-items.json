@@ -1,0 +1,112 @@
+[
+  {
+    "position": 0,
+    "title": "Re 1. Introduction to Recursion | Recursion Tree | Stack Space | Strivers A2Z DSA Course",
+    "videoId": "yVdKa8dnKiE"
+  },
+  {
+    "position": 1,
+    "title": "Re 2. Problems on Recursion | Strivers A2Z DSA Course",
+    "videoId": "un6PLygfXrA"
+  },
+  {
+    "position": 2,
+    "title": "Re 3. Parameterised and Functional Recursion | Strivers A2Z DSA Course",
+    "videoId": "69ZCDFy-OUo"
+  },
+  {
+    "position": 3,
+    "title": "Re 4. Problems on Functional Recursion | Strivers A2Z DSA Course",
+    "videoId": "twuC1F6gLI8"
+  },
+  {
+    "position": 4,
+    "title": "Re 5. Multiple Recursion Calls | Problems | Strivers A2Z DSA Course",
+    "videoId": "kvRjNm4rVBE"
+  },
+  {
+    "position": 5,
+    "title": "L6. Recursion on Subsequences | Printing Subsequences",
+    "videoId": "AxNNVECce8c"
+  },
+  {
+    "position": 6,
+    "title": "L7. All Kind of Patterns in Recursion | Print All | Print one | Count",
+    "videoId": "eQCS_v3bw0Q"
+  },
+  {
+    "position": 7,
+    "title": "Merge Sort | Algorithm | Pseudocode | Dry Run | Code | Strivers A2Z DSA Course",
+    "videoId": "ogjf7ORKfd8"
+  },
+  {
+    "position": 8,
+    "title": "Quick Sort For Beginners | Strivers A2Z DSA Course",
+    "videoId": "WIrA4YexLRQ"
+  },
+  {
+    "position": 9,
+    "title": "L8. Combination Sum | Recursion | Leetcode | C++ | Java",
+    "videoId": "OyZFFqQtu98"
+  },
+  {
+    "position": 10,
+    "title": "L9. Combination Sum II | Leetcode | Recursion | Java | C++",
+    "videoId": "G1fRTGRxXU8"
+  },
+  {
+    "position": 11,
+    "title": "L10. Subset Sum I | Recursion | C++ | Java",
+    "videoId": "rYkfBRtMJr8"
+  },
+  {
+    "position": 12,
+    "title": "L11. Subset Sum II | Leetcode | Recursion",
+    "videoId": "RIn3gOkbhQE"
+  },
+  {
+    "position": 13,
+    "title": "L12. Print all Permutations of a String/Array | Recursion | Approach - 1",
+    "videoId": "YK78FU5Ffjw"
+  },
+  {
+    "position": 14,
+    "title": "L13. Print all Permutations of a String/Array | Recursion | Approach - 2",
+    "videoId": "f2ic2Rsc9pU"
+  },
+  {
+    "position": 15,
+    "title": "L14. N-Queens | Leetcode Hard | Backtracking",
+    "videoId": "i05Ju7AftcM"
+  },
+  {
+    "position": 16,
+    "title": "L15. Sudoko Solver | Backtracking",
+    "videoId": "FWAIf_EVUKE"
+  },
+  {
+    "position": 17,
+    "title": "L16. M-Coloring Problem | Backtracking",
+    "videoId": "wuVwUK25Rfc"
+  },
+  {
+    "position": 18,
+    "title": "L17. Palindrome Partitioning | Leetcode | Recursion | C++ | Java",
+    "videoId": "WBgsABoClE0"
+  },
+  {
+    "position": 19,
+    "title": "L19. Rat in A Maze | Backtracking",
+    "videoId": "bLGZhJlt4y0"
+  },
+  {
+    "position": 20,
+    "title": "L18. K-th Permutation Sequence | Leetcode",
+    "videoId": "wT7gcXLYoao"
+  },
+  {
+    "position": 21,
+    "title": "Count Inversions in an Array | Brute and Optimal",
+    "videoId": "AseUmwVNaoY"
+  }
+]
