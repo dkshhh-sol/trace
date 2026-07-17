@@ -39,18 +39,18 @@ Tasks are grouped into waves; tasks within a wave can proceed in parallel, and e
   - Create a committed `.env.example` (no values) documenting the full required set; add a `!.env.example` exception to `.gitignore`.
   - _Requirements: 11.3, 11.4, 11.5, 14.1, 14.2, 14.3, 14.4, 14.5_
 
-- [ ] 3. Implement the database client and schema
-- [ ] 3.1 Create Drizzle schema files
+- [x] 3. Implement the database client and schema
+- [x] 3.1 Create Drizzle schema files
   - `lib/db/schema/auth.ts`: `users` (UUID PK, email unique, `lastLogin`, `createdAt`/`updatedAt`), `accounts`, `sessions`, `verification_tokens` shaped for `@auth/drizzle-adapter`.
   - `lib/db/schema/settings.ts`: `user_settings` (one-per-user, defaults for theme/dailyGoal/revision/notifications).
   - `lib/db/schema/future.ts`: stub tables `progress`, `notes`, `bookmarks`, `revision_queue`, `revision_history`, `analytics_daily` with `id`/`userId`/timestamps and `sanityDocumentId` where content is referenced.
   - `lib/db/schema/index.ts`: re-export all tables and inferred types.
   - _Requirements: 6.1, 6.2, 6.3, 6.4, 6.5, 6.6_
-- [ ] 3.2 Create the Drizzle client and migration config
+- [x] 3.2 Create the Drizzle client and migration config
   - `lib/db/client.ts`: `neon-http` driver over `env.DATABASE_URL` (pooled), Drizzle instance with schema.
   - `drizzle.config.ts`: use `DATABASE_URL_UNPOOLED`; add `db:generate` and `db:migrate` npm scripts (loading `.env.local` via dotenv).
   - _Requirements: 5.1, 5.2, 5.3, 5.4_
-- [ ] 3.3 Generate and apply the initial migration to Neon
+- [x] 3.3 Generate and apply the initial migration to Neon
   - Run `db:generate` then `db:migrate`; confirm tables exist on the Neon branch.
   - _Requirements: 6.1, 6.2_
 
