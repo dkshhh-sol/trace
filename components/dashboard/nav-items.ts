@@ -19,7 +19,7 @@ export type NavItem = {
 /** Shared navigation config consumed by both the sidebar and the bottom nav. */
 export const navItems: NavItem[] = [
   { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-  { label: "Roadmaps", href: "/roadmaps", icon: Map, comingSoon: true },
+  { label: "Roadmaps", href: "/roadmaps", icon: Map },
   { label: "Notes", href: "/notes", icon: NotebookPen, comingSoon: true },
   { label: "Bookmarks", href: "/bookmarks", icon: Bookmark, comingSoon: true },
   { label: "Revision", href: "/revision", icon: RotateCcw, comingSoon: true },

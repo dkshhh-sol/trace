@@ -63,6 +63,9 @@ export const authConfig = {
      * regardless of recent activity.
      */
     async session({ session, user }) {
+      // Expose the user id to the app (used for per-user progress, etc.).
+      if (session.user) session.user.id = user.id;
+
       const [row] = await db
         .select({ createdAt: sessions.createdAt })
         .from(sessions)

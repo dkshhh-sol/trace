@@ -30,13 +30,13 @@ export function SiteHeader() {
 
           <div className="flex items-center gap-1.5">
             <Link
-              href="#get-started"
+              href="/login"
               className="hidden rounded-lg px-3 py-2 text-sm text-muted-foreground transition-colors hover:text-foreground sm:inline-flex"
             >
               Sign in
             </Link>
             <Link
-              href="#get-started"
+              href="/login"
               className="inline-flex h-9 items-center rounded-lg bg-foreground px-3.5 text-sm font-medium text-background transition-transform hover:scale-[1.02] active:scale-[0.99]"
             >
               Get started
