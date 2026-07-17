@@ -79,24 +79,24 @@ Tasks are grouped into waves; tasks within a wave can proceed in parallel, and e
   - Verify the homepage still renders at `/` and builds.
   - _Requirements: 10.1_
 
-- [ ] 7. Build the authenticated app shell
-- [ ] 7.1 Shell frame and navigation config
+- [x] 7. Build the authenticated app shell
+- [x] 7.1 Shell frame and navigation config
   - `components/dashboard/nav-items.ts`: shared nav definition.
   - `components/dashboard/app-shell.tsx` (Server): frame with sidebar/bottom-nav/user-menu slots and semantic landmarks.
   - `app/(dashboard)/layout.tsx` (Server): `await requireSession()`, render `<AppShell user={session.user}>`.
   - _Requirements: 2.2, 2.3, 9.1, 9.2, 10.1, 10.2, 12.3_
-- [ ] 7.2 Responsive navigation components
+- [x] 7.2 Responsive navigation components
   - `components/dashboard/sidebar.tsx` (Client): persistent ≥1024px, collapsible 768–1023px with toggle; active link via `usePathname`.
   - `components/dashboard/bottom-nav.tsx` (Client): fixed bottom bar <768px.
   - `components/dashboard/user-menu.tsx` (Client): avatar + sign-out action.
   - _Requirements: 9.2, 9.3, 9.4, 10.2, 10.3, 13.1, 13.2, 13.3, 13.4, 13.5, 13.6_
 
-- [ ] 8. Build the dashboard and widgets
-- [ ] 8.1 Widget shell and states
+- [x] 8. Build the dashboard and widgets
+- [x] 8.1 Widget shell and states
   - `components/dashboard/widgets/widget-card.tsx`: shared header + skeleton (`WidgetSkeleton`) + error slot.
   - Add a `(dashboard)` `loading.tsx` and `error.tsx`, plus a per-widget error boundary with a 10s guard.
   - _Requirements: 9.6, 9.7_
-- [ ] 8.2 The eight widgets and dashboard page
+- [x] 8.2 The eight widgets and dashboard page
   - Implement Continue Learning, Daily Goal, Streak, Revision Queue, Recent Notes, Bookmarks, Activity Graph, Announcements as independent Server Components with documented empty/placeholder states (no hardcoded educational content).
   - `app/(dashboard)/dashboard/page.tsx`: compose all eight, each wrapped in `<Suspense>`.
   - _Requirements: 8.3, 8.4, 8.5, 9.1, 9.5, 9.6, 10.1_

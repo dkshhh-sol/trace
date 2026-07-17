@@ -1,7 +1,11 @@
 import "server-only";
 
+import type { Session } from "next-auth";
 import { redirect } from "next/navigation";
 import { auth } from "./index";
+
+/** A session guaranteed to have an authenticated user. */
+export type AuthedSession = Session & { user: NonNullable<Session["user"]> };
 
 /**
  * Authoritative, server-side session helpers.
@@ -20,10 +24,10 @@ export async function getSession() {
  * Requires an authenticated session. Redirects to /login when absent, so
  * protected content never renders for unauthenticated visitors (Requirement 2.1).
  */
-export async function requireSession() {
+export async function requireSession(): Promise<AuthedSession> {
   const session = await auth();
   if (!session?.user) {
     redirect("/login");
   }
-  return session;
+  return session as AuthedSession;
 }
