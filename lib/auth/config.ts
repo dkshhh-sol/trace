@@ -46,6 +46,8 @@ export const authConfig = {
       clientSecret: env.AUTH_GOOGLE_SECRET,
     }),
   ],
+  // Trust the deployment host (Vercel) and localhost when deriving callback URLs.
+  trustHost: true,
   session: {
     strategy: "database",
     // 30-minute inactivity timeout; the adapter refreshes `expires` on access,
