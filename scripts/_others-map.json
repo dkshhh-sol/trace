@@ -1,0 +1,330 @@
+[
+  {
+    "step": "Step 5: Strings [Basic and Medium]",
+    "id": "110",
+    "name": "Remove outermost Parentheses",
+    "videoId": "I0osO1BqiGw",
+    "channel": "FastForward Coders - by Gurmeet",
+    "foundTitle": "1021. Remove Outermost Parentheses | Leetcode | Easy Problem | Strings | Stacks | Counter Approach"
+  },
+  {
+    "step": "Step 5: Strings [Basic and Medium]",
+    "id": "111",
+    "name": "Reverse words in a given string / Palindrome Check",
+    "videoId": "tX-ZcKTNwYk",
+    "channel": "Technosage",
+    "foundTitle": "Reverse words in a string | Leetcode problem 151 | Top 150 interview question series"
+  },
+  {
+    "step": "Step 5: Strings [Basic and Medium]",
+    "id": "112",
+    "name": "Largest odd number in a string",
+    "videoId": "eICBvqI4qTE",
+    "channel": "Ayushi Sharma",
+    "foundTitle": "1. Largest Odd Number in String | Strings - Easy | #LearnDSA | Leetcode 1903"
+  },
+  {
+    "step": "Step 5: Strings [Basic and Medium]",
+    "id": "113",
+    "name": "Longest Common Prefix",
+    "videoId": "wtOQaovlvhY",
+    "channel": "Nikhil Lohia",
+    "foundTitle": "Longest Common Prefix (LeetCode 14) | Full solution with animations and examples | Study Algorithms"
+  },
+  {
+    "step": "Step 5: Strings [Basic and Medium]",
+    "id": "114",
+    "name": "Isomorphic String",
+    "videoId": "ogTMIFPjNkQ",
+    "channel": "Nikhil Lohia",
+    "foundTitle": "Isomorphic Strings (LeetCode 205) | Full solution using a HashMap | Easy to understand"
+  },
+  {
+    "step": "Step 5: Strings [Basic and Medium]",
+    "id": "115",
+    "name": "Check whether one string is a rotation of another",
+    "videoId": "5e63aHK6Q-E",
+    "channel": "Techdose",
+    "foundTitle": "Find if one string is a rotation of another string"
+  },
+  {
+    "step": "Step 5: Strings [Basic and Medium]",
+    "id": "116",
+    "name": "Check if two strings are anagram",
+    "videoId": "Yjw9b9OMUZY",
+    "channel": "Naveen AutomationLabs",
+    "foundTitle": "Check Two Strings are Anagram Or Not using Sort and Equals in Java"
+  },
+  {
+    "step": "Step 5: Strings [Basic and Medium]",
+    "id": "117",
+    "name": "Sort Characters by frequency",
+    "videoId": "pnxShVARLLw",
+    "channel": "codestorywithMIK",
+    "foundTitle": "Sort Characters By Frequency | Sorting | Lambda | Leetcode 451"
+  },
+  {
+    "step": "Step 5: Strings [Basic and Medium]",
+    "id": "118",
+    "name": "Maximum Nesting Depth of Parenthesis",
+    "videoId": "9Qho1zEH3NI",
+    "channel": "Ayushi Sharma",
+    "foundTitle": "6. Maximum Nesting Depth of the Parentheses | Strings - Easy | #LearnDSA | Leetcode 1614"
+  },
+  {
+    "step": "Step 5: Strings [Basic and Medium]",
+    "id": "119",
+    "name": "Roman Number to Integer and vice versa",
+    "videoId": "3jdxYj3DD98",
+    "channel": "NeetCode",
+    "foundTitle": "Roman to Integer - Leetcode 13 - Python"
+  },
+  {
+    "step": "Step 5: Strings [Basic and Medium]",
+    "id": "120",
+    "name": "Implement Atoi",
+    "videoId": "2I9XO8jwZCA",
+    "channel": "Techdose",
+    "foundTitle": "Implement atoi | Convert string to integer"
+  },
+  {
+    "step": "Step 5: Strings [Basic and Medium]",
+    "id": "121",
+    "name": "Count Number of Substrings",
+    "videoId": "xtqN4qlgr8s",
+    "channel": "take U forward",
+    "foundTitle": "L7. Number of Substrings Containing All Three Characters | 2 Pointers and Sliding Window Playlist"
+  },
+  {
+    "step": "Step 5: Strings [Basic and Medium]",
+    "id": "122",
+    "name": "Longest Palindromic Substring [Do it without DP]",
+    "videoId": "uX0-xyPkR2w",
+    "channel": "Nikhil Lohia",
+    "foundTitle": "Longest Palindromic Sub-string (LeetCode 5) | Full solution with examples | Study Algorithms"
+  },
+  {
+    "step": "Step 5: Strings [Basic and Medium]",
+    "id": "123",
+    "name": "Sum of Beauty of all substring",
+    "videoId": "ARLutVfhw2I",
+    "channel": "Ayushi Sharma",
+    "foundTitle": "7. Sum of Beauty of All Substrings | Strings - Medium | Leetcode 1781 | Learn DSA"
+  },
+  {
+    "step": "Step 5: Strings [Basic and Medium]",
+    "id": "124",
+    "name": "Reverse every word in a string",
+    "videoId": "mdej8UiRCkI",
+    "channel": "codestorywithMIK",
+    "foundTitle": "Reverse Words in a String (Amazon, Microsoft, MentorGraphics, MakeMyTrip) : Explanation➕Live Coding"
+  },
+  {
+    "step": "Step 11: Heaps",
+    "id": "241",
+    "name": "Introduction to Priority Queues using Binary Heaps",
+    "videoId": "NKJnHewiGdc",
+    "channel": "CodeHelp - by Babbar",
+    "foundTitle": "Lecture 74: Heaps in C++ || Heap Sort || Insertion/Deletion in Heap || Priority Queue STL"
+  },
+  {
+    "step": "Step 11: Heaps",
+    "id": "242",
+    "name": "Min Heap and Max Heap Implementation",
+    "videoId": "NKJnHewiGdc",
+    "channel": "CodeHelp - by Babbar",
+    "foundTitle": "Lecture 74: Heaps in C++ || Heap Sort || Insertion/Deletion in Heap || Priority Queue STL"
+  },
+  {
+    "step": "Step 11: Heaps",
+    "id": "243",
+    "name": "Check if an array represents a min-heap or not",
+    "videoId": "AxcEJLQBELU",
+    "channel": "Code and Debug",
+    "foundTitle": "DSA in Python Course - Check if an Array Represents a Min Heap | Validation Explained | Part 185"
+  },
+  {
+    "step": "Step 11: Heaps",
+    "id": "244",
+    "name": "Convert min Heap to max Heap",
+    "videoId": "NKJnHewiGdc",
+    "channel": "CodeHelp - by Babbar",
+    "foundTitle": "Lecture 74: Heaps in C++ || Heap Sort || Insertion/Deletion in Heap || Priority Queue STL"
+  },
+  {
+    "step": "Step 11: Heaps",
+    "id": "245",
+    "name": "Kth largest element in an array",
+    "videoId": "Lk-QYXyPL3g",
+    "channel": "Coder Army",
+    "foundTitle": "Kth smallest element in an array | Kth Largest element in an array | Heap | Priority Queue"
+  },
+  {
+    "step": "Step 11: Heaps",
+    "id": "246",
+    "name": "Kth smallest element in an array",
+    "videoId": "Lk-QYXyPL3g",
+    "channel": "Coder Army",
+    "foundTitle": "Kth smallest element in an array | Kth Largest element in an array | Heap | Priority Queue"
+  },
+  {
+    "step": "Step 11: Heaps",
+    "id": "247",
+    "name": "Sort K sorted array",
+    "videoId": "dYfM6J1y0mU",
+    "channel": "Aditya Verma",
+    "foundTitle": "4 Sort a K Sorted Array | Sort Nearly Sorted Array"
+  },
+  {
+    "step": "Step 11: Heaps",
+    "id": "248",
+    "name": "Merge M sorted Lists",
+    "videoId": "55aenUfSIhQ",
+    "channel": "Padho with Pratyush",
+    "foundTitle": "Best Explanation Of Merge K Sorted Lists | HEAP DSA Pattern"
+  },
+  {
+    "step": "Step 11: Heaps",
+    "id": "249",
+    "name": "Replace each array element by its corresponding rank",
+    "videoId": "179XocEJcLY",
+    "channel": "Raman",
+    "foundTitle": "Replace each array element by its corresponding rank (Max heap)"
+  },
+  {
+    "step": "Step 11: Heaps",
+    "id": "250",
+    "name": "Task Scheduler",
+    "videoId": "VDe3HuevArs",
+    "channel": "Kapil Yadav",
+    "foundTitle": "Task Scheduler | Leetcode 621 | Priority Queue | Heaps | C++"
+  },
+  {
+    "step": "Step 11: Heaps",
+    "id": "251",
+    "name": "Hands of Straights",
+    "videoId": "amnrMCVd2YI",
+    "channel": "NeetCode",
+    "foundTitle": "Hand of Straights - Leetcode 846 - Python"
+  },
+  {
+    "step": "Step 11: Heaps",
+    "id": "252",
+    "name": "Design twitter",
+    "videoId": "49KGEPuZuLs",
+    "channel": "Kabil Bano",
+    "foundTitle": "L9. Design Twitter | Intuition | Logic | LeetCode | Heap | Priority Queue | #coding #leetcode"
+  },
+  {
+    "step": "Step 11: Heaps",
+    "id": "253",
+    "name": "Connect n ropes with minimal cost",
+    "videoId": "Eb1A6nm_Nic",
+    "channel": "Anuj Kumar Sharma",
+    "foundTitle": "Connect N Ropes with minimum cost | Amazon Interview Question | PriorityQueue | DSA-One Course #34"
+  },
+  {
+    "step": "Step 11: Heaps",
+    "id": "254",
+    "name": "Kth largest element in a stream of running integers",
+    "videoId": "hOjcdrqMoQ8",
+    "channel": "NeetCode",
+    "foundTitle": "Kth Largest Element in a Stream - Leetcode 703 - Python"
+  },
+  {
+    "step": "Step 11: Heaps",
+    "id": "255",
+    "name": "Maximum Sum Combination",
+    "videoId": "iY6-u0yt-Is",
+    "channel": "Aryan Mittal",
+    "foundTitle": "Find K Pairs with Smallest Sums II Min Heap II Priority Queue II Merge k Sorted List II Leetcode 373"
+  },
+  {
+    "step": "Step 11: Heaps",
+    "id": "256",
+    "name": "Find Median from Data Stream",
+    "videoId": "itmhHWaHupI",
+    "channel": "NeetCode",
+    "foundTitle": "Find Median from Data Stream - Heap &amp; Priority Queue - Leetcode 295"
+  },
+  {
+    "step": "Step 11: Heaps",
+    "id": "257",
+    "name": "K most frequent elements",
+    "videoId": "6_v6OoxvMOE",
+    "channel": "AlgoMasterIO",
+    "foundTitle": "Top K Elements in 6 minutes | LeetCode Pattern"
+  },
+  {
+    "step": "Step 18: Strings (Advanced)",
+    "id": "441",
+    "name": "Minimum number of bracket reversals needed to make an expression balanced",
+    "videoId": "8q1sma-qMsA",
+    "channel": "GeeksforGeeks",
+    "foundTitle": "Minimum number of bracket reversals needed to make an expression balanced | GeeksforGeeks"
+  },
+  {
+    "step": "Step 18: Strings (Advanced)",
+    "id": "442",
+    "name": "Count and Say",
+    "videoId": "5uJitfSM3vk",
+    "channel": "codestorywithMIK",
+    "foundTitle": "Count and Say | Made Super Easy | Simple Explanation | Leetcode 38 | codestorywithMIK"
+  },
+  {
+    "step": "Step 18: Strings (Advanced)",
+    "id": "443",
+    "name": "Hashing In Strings | Theory",
+    "videoId": "qQ8vS2btsxI",
+    "channel": "Abdul Bari",
+    "foundTitle": "9.2 Rabin-Karp String Matching Algorithm"
+  },
+  {
+    "step": "Step 18: Strings (Advanced)",
+    "id": "444",
+    "name": "Rabin Karp",
+    "videoId": "qQ8vS2btsxI",
+    "channel": "Abdul Bari",
+    "foundTitle": "9.2 Rabin-Karp String Matching Algorithm"
+  },
+  {
+    "step": "Step 18: Strings (Advanced)",
+    "id": "447",
+    "name": "Shortest Palindrome",
+    "videoId": "niOT-FK1RH8",
+    "channel": "NeetCodeIO",
+    "foundTitle": "Rabin Karp - Shortest Palindrome - Leetcode 214"
+  },
+  {
+    "step": "Step 18: Strings (Advanced)",
+    "id": "448",
+    "name": "Longest happy prefix",
+    "videoId": "u1Gd93lM1as",
+    "channel": "Aditya Verma",
+    "foundTitle": "5 Longest Happy Prefix | String Matching"
+  },
+  {
+    "step": "Step 18: Strings (Advanced)",
+    "id": "449",
+    "name": "Count palindromic subsequence in given string",
+    "videoId": "6i_T5kkfv4A",
+    "channel": "take U forward",
+    "foundTitle": "DP 28. Longest Palindromic Subsequence"
+  },
+  {
+    "step": "Step 18: Strings (Advanced)",
+    "id": "445",
+    "name": "Z-Function",
+    "videoId": "mcYxvSmNDlY",
+    "channel": "Hitesh Tripathi",
+    "foundTitle": "Z - Function and Its Calculation (Hindi + English) | String Algorithms"
+  },
+  {
+    "step": "Step 18: Strings (Advanced)",
+    "id": "446",
+    "name": "KMP algo / LPS(pi) array",
+    "videoId": "V5-7GzOfADQ",
+    "channel": "Abdul Bari",
+    "foundTitle": "9.1 Knuth-Morris-Pratt KMP String Matching Algorithm"
+  }
+]
