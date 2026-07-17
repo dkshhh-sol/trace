@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import Link from "next/link";
 import { Check, Play } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { setProblemDone } from "@/lib/content/actions";
@@ -64,9 +65,13 @@ export function ProblemRow({
 
       <div className="flex shrink-0 items-center gap-1.5">
         {problem.youtube && (
-          <LinkChip href={problem.youtube} label="Lecture">
+          <Link
+            href={`/roadmaps/${roadmapSlug}/lecture/${problem.id}`}
+            className="inline-flex items-center gap-1 rounded-md border border-brand/30 bg-brand/10 px-2 py-1 text-xs text-brand transition-colors hover:bg-brand/20"
+          >
             <Play className="size-3" />
-          </LinkChip>
+            Lecture
+          </Link>
         )}
         {problem.leetcode && <LinkChip href={problem.leetcode} label="LeetCode" />}
         {problem.gfg && <LinkChip href={problem.gfg} label="GFG" />}
