@@ -15,9 +15,14 @@ const serverSchema = z.object({
   AUTH_SECRET: z.string().min(1),
   AUTH_GOOGLE_ID: z.string().min(1),
   AUTH_GOOGLE_SECRET: z.string().min(1),
-  AUTH_URL: z.string().min(1).refine((v) => /^https?:\/\//.test(v), {
-    message: "must be an http(s) URL",
-  }),
+  // Optional: with `trustHost: true`, Auth.js derives the URL from the request
+  // (correct on Vercel + preview deploys). Set it only to override.
+  AUTH_URL: z
+    .string()
+    .refine((v) => !v || /^https?:\/\//.test(v), {
+      message: "must be an http(s) URL",
+    })
+    .optional(),
   DATABASE_URL: z.string().min(1).refine((v) => v.startsWith("postgres"), {
     message: "must be a postgres connection string",
   }),
