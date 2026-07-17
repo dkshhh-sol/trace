@@ -69,11 +69,11 @@ Tasks are grouped into waves; tasks within a wave can proceed in parallel, and e
   - Sign-out server action calling `signOut({ redirectTo: "/" })`.
   - _Requirements: 1.5, 1.6, 3.3, 3.4, 3.6_
 
-- [ ] 5. Add optimistic route protection
+- [x] 5. Add optimistic route protection
   - Create root `proxy.ts` (Next.js 16): presence-check the session cookie for `/dashboard/:path*`, redirect to `/login?callbackUrl=…` when absent, with `config.matcher`.
   - _Requirements: 2.1, 2.6_
 
-- [ ] 6. Restructure routes into route groups
+- [x] 6. Restructure routes into route groups
   - Create `app/(marketing)/` and move the existing homepage into it (URL stays `/`); ensure marketing uses the plain root layout with no app shell.
   - Create the `app/(dashboard)/` group placeholder ahead of the shell.
   - Verify the homepage still renders at `/` and builds.
