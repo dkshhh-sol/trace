@@ -33,7 +33,7 @@ Tasks are grouped into waves; tasks within a wave can proceed in parallel, and e
   - Verify the project still builds after install.
   - _Requirements: 5.1, 7.2, 11.1_
 
-- [ ] 2. Add fail-fast environment module and align env vars
+- [x] 2. Add fail-fast environment module and align env vars
   - Rename Sanity vars in `.env.local` to `NEXT_PUBLIC_SANITY_PROJECT_ID`, `NEXT_PUBLIC_SANITY_DATASET`, `NEXT_PUBLIC_SANITY_API_VERSION`; keep `SANITY_API_TOKEN` server-only.
   - Create `lib/env.ts` with Zod server + public schemas; parse at import, aggregate and throw named errors for missing/invalid vars.
   - Create a committed `.env.example` (no values) documenting the full required set; add a `!.env.example` exception to `.gitignore`.
