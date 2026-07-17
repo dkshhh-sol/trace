@@ -1,0 +1,530 @@
+[
+  {
+    "step": "Step 5: Strings [Basic and Medium]",
+    "topic": "5.1 Basic",
+    "id": "110",
+    "name": "Remove outermost Parentheses",
+    "videoId": "cHT6sG_hUZI",
+    "foundTitle": "L11. Valid Parenthesis String | Multiple Approaches"
+  },
+  {
+    "step": "Step 5: Strings [Basic and Medium]",
+    "topic": "5.1 Basic",
+    "id": "111",
+    "name": "Reverse words in a given string / Palindrome Check",
+    "videoId": "-zSxTJkcdAo",
+    "foundTitle": "L3. Longest Substring Without Repeating Characters | 2 Pointers and Sliding Window Playlist"
+  },
+  {
+    "step": "Step 5: Strings [Basic and Medium]",
+    "topic": "5.1 Basic",
+    "id": "112",
+    "name": "Largest odd number in a string",
+    "videoId": "-zSxTJkcdAo",
+    "foundTitle": "L3. Longest Substring Without Repeating Characters | 2 Pointers and Sliding Window Playlist"
+  },
+  {
+    "step": "Step 5: Strings [Basic and Medium]",
+    "topic": "5.1 Basic",
+    "id": "113",
+    "name": "Longest Common Prefix",
+    "videoId": "_wP9mWNPL5w",
+    "foundTitle": "DP 27. Longest Common Substring | DP on Strings 🔥"
+  },
+  {
+    "step": "Step 5: Strings [Basic and Medium]",
+    "topic": "5.1 Basic",
+    "id": "114",
+    "name": "Isomorphic String",
+    "videoId": "EPx-ZDciIpc",
+    "foundTitle": "This Leetcode&#39;s feature is a scam ❌"
+  },
+  {
+    "step": "Step 5: Strings [Basic and Medium]",
+    "topic": "5.1 Basic",
+    "id": "115",
+    "name": "Check whether one string is a rotation of another",
+    "videoId": "Z0R2u6gd3GU",
+    "foundTitle": "Rotate Matrix/Image by 90 Degrees | Brute - Optimal"
+  },
+  {
+    "step": "Step 5: Strings [Basic and Medium]",
+    "topic": "5.1 Basic",
+    "id": "116",
+    "name": "Check if two strings are anagram",
+    "videoId": "EPx-ZDciIpc",
+    "foundTitle": "This Leetcode&#39;s feature is a scam ❌"
+  },
+  {
+    "step": "Step 5: Strings [Basic and Medium]",
+    "topic": "5.2 Medium String",
+    "id": "117",
+    "name": "Sort Characters by frequency",
+    "videoId": "xtqN4qlgr8s",
+    "foundTitle": "L7. Number of Substrings Containing All Three Characters | 2 Pointers and Sliding Window Playlist"
+  },
+  {
+    "step": "Step 5: Strings [Basic and Medium]",
+    "topic": "5.2 Medium String",
+    "id": "118",
+    "name": "Maximum Nesting Depth of Parenthesis",
+    "videoId": "cHT6sG_hUZI",
+    "foundTitle": "L11. Valid Parenthesis String | Multiple Approaches"
+  },
+  {
+    "step": "Step 5: Strings [Basic and Medium]",
+    "topic": "5.2 Medium String",
+    "id": "119",
+    "name": "Roman Number to Integer and vice versa",
+    "videoId": "",
+    "foundTitle": "(no result)"
+  },
+  {
+    "step": "Step 5: Strings [Basic and Medium]",
+    "topic": "5.2 Medium String",
+    "id": "120",
+    "name": "Implement Atoi",
+    "videoId": "yVdKa8dnKiE",
+    "foundTitle": "Re 1. Introduction to Recursion | Recursion Tree | Stack Space | Strivers A2Z DSA Course"
+  },
+  {
+    "step": "Step 5: Strings [Basic and Medium]",
+    "topic": "5.2 Medium String",
+    "id": "121",
+    "name": "Count Number of Substrings",
+    "videoId": "xtqN4qlgr8s",
+    "foundTitle": "L7. Number of Substrings Containing All Three Characters | 2 Pointers and Sliding Window Playlist"
+  },
+  {
+    "step": "Step 5: Strings [Basic and Medium]",
+    "topic": "5.2 Medium String",
+    "id": "122",
+    "name": "Longest Palindromic Substring [Do it without DP]",
+    "videoId": "6i_T5kkfv4A",
+    "foundTitle": "DP 28. Longest Palindromic Subsequence"
+  },
+  {
+    "step": "Step 5: Strings [Basic and Medium]",
+    "topic": "5.2 Medium String",
+    "id": "123",
+    "name": "Sum of Beauty of all substring",
+    "videoId": "xtqN4qlgr8s",
+    "foundTitle": "L7. Number of Substrings Containing All Three Characters | 2 Pointers and Sliding Window Playlist"
+  },
+  {
+    "step": "Step 5: Strings [Basic and Medium]",
+    "topic": "5.2 Medium String",
+    "id": "124",
+    "name": "Reverse every word in a string",
+    "videoId": "-zSxTJkcdAo",
+    "foundTitle": "L3. Longest Substring Without Repeating Characters | 2 Pointers and Sliding Window Playlist"
+  },
+  {
+    "step": "Step 8: Bit Manipulation",
+    "topic": "8.1 Learn Bit Manipulation",
+    "id": "181",
+    "name": "Introduction to Bit Manipulation",
+    "videoId": "qQd-ViW7bfk",
+    "foundTitle": "L1. Introduction to Bit Manipulation | 1&#39;s 2&#39;s Compliment | Bit Operators"
+  },
+  {
+    "step": "Step 8: Bit Manipulation",
+    "topic": "8.1 Learn Bit Manipulation",
+    "id": "182",
+    "name": "Check if the i-th bit is set or not",
+    "videoId": "nttpF8kwgd4",
+    "foundTitle": "L2. Must Know Tricks in Bit Manipulation | Swap two numbers without third variable"
+  },
+  {
+    "step": "Step 8: Bit Manipulation",
+    "topic": "8.1 Learn Bit Manipulation",
+    "id": "183",
+    "name": "Check if a number is odd or not",
+    "videoId": "nttpF8kwgd4",
+    "foundTitle": "L2. Must Know Tricks in Bit Manipulation | Swap two numbers without third variable"
+  },
+  {
+    "step": "Step 8: Bit Manipulation",
+    "topic": "8.1 Learn Bit Manipulation",
+    "id": "184",
+    "name": "Check if a number is power of 2 or not",
+    "videoId": "hFWckDXE-K8",
+    "foundTitle": "L5. Power Exponentiation | Maths Playlist"
+  },
+  {
+    "step": "Step 8: Bit Manipulation",
+    "topic": "8.1 Learn Bit Manipulation",
+    "id": "185",
+    "name": "Count the number of set bits",
+    "videoId": "nttpF8kwgd4",
+    "foundTitle": "L2. Must Know Tricks in Bit Manipulation | Swap two numbers without third variable"
+  },
+  {
+    "step": "Step 8: Bit Manipulation",
+    "topic": "8.1 Learn Bit Manipulation",
+    "id": "186",
+    "name": "Set/Unset the rightmost unset bit",
+    "videoId": "nttpF8kwgd4",
+    "foundTitle": "L2. Must Know Tricks in Bit Manipulation | Swap two numbers without third variable"
+  },
+  {
+    "step": "Step 8: Bit Manipulation",
+    "topic": "8.1 Learn Bit Manipulation",
+    "id": "187",
+    "name": "Swap two numbers",
+    "videoId": "nttpF8kwgd4",
+    "foundTitle": "L2. Must Know Tricks in Bit Manipulation | Swap two numbers without third variable"
+  },
+  {
+    "step": "Step 8: Bit Manipulation",
+    "topic": "8.1 Learn Bit Manipulation",
+    "id": "188",
+    "name": "Divide two integers without using multiplication, division and mod operator",
+    "videoId": "pBD4B1tzgVc",
+    "foundTitle": "L9. Divide Two Integers without using Multiplication and Division Operators | Bit Manipulation"
+  },
+  {
+    "step": "Step 8: Bit Manipulation",
+    "topic": "8.2 Interview Problems",
+    "id": "189",
+    "name": "Count number of bits to be flipped to convert A to B",
+    "videoId": "OOdrmcfZXd8",
+    "foundTitle": "L3. Minimum Bit Flips to Convert Number | Bit Manipulation"
+  },
+  {
+    "step": "Step 8: Bit Manipulation",
+    "topic": "8.2 Interview Problems",
+    "id": "190",
+    "name": "Find the number that appears odd number of times",
+    "videoId": "5Bb2nqA40JY",
+    "foundTitle": "L6. Single Number II | Bit Manipulation"
+  },
+  {
+    "step": "Step 8: Bit Manipulation",
+    "topic": "8.2 Interview Problems",
+    "id": "191",
+    "name": "Power Set",
+    "videoId": "LqKaUv1G3_I",
+    "foundTitle": "L4. Power Set | Bit Manipulation"
+  },
+  {
+    "step": "Step 8: Bit Manipulation",
+    "topic": "8.2 Interview Problems",
+    "id": "192",
+    "name": "Find xor of numbers from L to R",
+    "videoId": "WqGb7159h7Q",
+    "foundTitle": "L8. XOR of Numbers in a Given Range | Bit Manipulation"
+  },
+  {
+    "step": "Step 8: Bit Manipulation",
+    "topic": "8.2 Interview Problems",
+    "id": "193",
+    "name": "Find the two numbers appearing odd number of times",
+    "videoId": "5Bb2nqA40JY",
+    "foundTitle": "L6. Single Number II | Bit Manipulation"
+  },
+  {
+    "step": "Step 8: Bit Manipulation",
+    "topic": "8.3 Advanced Maths",
+    "id": "194",
+    "name": "Print Prime Factors of a Number",
+    "videoId": "LT7XhVdeRyg",
+    "foundTitle": "L4. Print all prime factors of a Number | Maths Playlist"
+  },
+  {
+    "step": "Step 8: Bit Manipulation",
+    "topic": "8.3 Advanced Maths",
+    "id": "195",
+    "name": "All Divisors of a Number",
+    "videoId": "Ae_Ag_saG9s",
+    "foundTitle": "L2. Print all Divisors of a Number | Maths Playlist"
+  },
+  {
+    "step": "Step 8: Bit Manipulation",
+    "topic": "8.3 Advanced Maths",
+    "id": "196",
+    "name": "Sieve of Eratosthenes",
+    "videoId": "g5Fuxn_AvSk",
+    "foundTitle": "L6. Sieve of Eratosthenes | Maths Playlist"
+  },
+  {
+    "step": "Step 8: Bit Manipulation",
+    "topic": "8.3 Advanced Maths",
+    "id": "197",
+    "name": "Find Prime Factorisation of a Number using Sieve",
+    "videoId": "g5Fuxn_AvSk",
+    "foundTitle": "L6. Sieve of Eratosthenes | Maths Playlist"
+  },
+  {
+    "step": "Step 8: Bit Manipulation",
+    "topic": "8.3 Advanced Maths",
+    "id": "198",
+    "name": "Power(n, x)",
+    "videoId": "hFWckDXE-K8",
+    "foundTitle": "L5. Power Exponentiation | Maths Playlist"
+  },
+  {
+    "step": "Step 11: Heaps",
+    "topic": "11.1 Learning",
+    "id": "241",
+    "name": "Introduction to Priority Queues using Binary Heaps",
+    "videoId": "V6H1qAeB-l4",
+    "foundTitle": "G-32. Dijkstra&#39;s Algorithm - Using Priority Queue - C++ and Java - Part 1"
+  },
+  {
+    "step": "Step 11: Heaps",
+    "topic": "11.1 Learning",
+    "id": "242",
+    "name": "Min Heap and Max Heap Implementation",
+    "videoId": "mJcZjjKzeqk",
+    "foundTitle": "G-45. Prim&#39;s Algorithm - Minimum Spanning Tree - C++ and Java"
+  },
+  {
+    "step": "Step 11: Heaps",
+    "topic": "11.1 Learning",
+    "id": "243",
+    "name": "Check if an array represents a min-heap or not",
+    "videoId": "thUd_WJn6wk",
+    "foundTitle": "BS 19. Painter&#39;s Partition and Split Array - Largest Sum"
+  },
+  {
+    "step": "Step 11: Heaps",
+    "topic": "11.1 Learning",
+    "id": "244",
+    "name": "Convert min Heap to max Heap",
+    "videoId": "HDHQ8lAWakY",
+    "foundTitle": "L8. Non Overlapping Intervals | Greedy Algorithms Playlist"
+  },
+  {
+    "step": "Step 11: Heaps",
+    "topic": "11.2 Medium Problems",
+    "id": "245",
+    "name": "Kth largest element in an array",
+    "videoId": "9TJYWh0adfk",
+    "foundTitle": "L45. K-th Smallest/Largest Element in BST"
+  },
+  {
+    "step": "Step 11: Heaps",
+    "topic": "11.2 Medium Problems",
+    "id": "246",
+    "name": "Kth smallest element in an array",
+    "videoId": "9TJYWh0adfk",
+    "foundTitle": "L45. K-th Smallest/Largest Element in BST"
+  },
+  {
+    "step": "Step 11: Heaps",
+    "topic": "11.2 Medium Problems",
+    "id": "247",
+    "name": "Sort K sorted array",
+    "videoId": "1zktEppsdig",
+    "foundTitle": "L25. Merge K Sorted Lists | Multiple Approaches"
+  },
+  {
+    "step": "Step 11: Heaps",
+    "topic": "11.2 Medium Problems",
+    "id": "248",
+    "name": "Merge M sorted Lists",
+    "videoId": "1zktEppsdig",
+    "foundTitle": "L25. Merge K Sorted Lists | Multiple Approaches"
+  },
+  {
+    "step": "Step 11: Heaps",
+    "topic": "11.2 Medium Problems",
+    "id": "249",
+    "name": "Replace each array element by its corresponding rank",
+    "videoId": "",
+    "foundTitle": "(no result)"
+  },
+  {
+    "step": "Step 11: Heaps",
+    "topic": "11.2 Medium Problems",
+    "id": "250",
+    "name": "Task Scheduler",
+    "videoId": "QbwltemZbRg",
+    "foundTitle": "L6. Job Sequencing Problem | Greedy Algorithm Playlist"
+  },
+  {
+    "step": "Step 11: Heaps",
+    "topic": "11.2 Medium Problems",
+    "id": "251",
+    "name": "Hands of Straights",
+    "videoId": "DTDWwLSmRBk",
+    "foundTitle": "1 Crore Salary != Good Software Engineer"
+  },
+  {
+    "step": "Step 11: Heaps",
+    "topic": "11.3 Hard Problems",
+    "id": "252",
+    "name": "Design twitter",
+    "videoId": "6Hcwdvl7Q08",
+    "foundTitle": "Dussehra GIFT | BIGGEST SURPRISE REVEALED🔥 #shorts"
+  },
+  {
+    "step": "Step 11: Heaps",
+    "topic": "11.3 Hard Problems",
+    "id": "253",
+    "name": "Connect n ropes with minimal cost",
+    "videoId": "xwomavsC86c",
+    "foundTitle": "DP 50. Minimum Cost to Cut the Stick"
+  },
+  {
+    "step": "Step 11: Heaps",
+    "topic": "11.3 Hard Problems",
+    "id": "254",
+    "name": "Kth largest element in a stream of running integers",
+    "videoId": "D1oDwWCq50g",
+    "foundTitle": "Bs-22. K-th element of two sorted arrays | Binary Search Approach"
+  },
+  {
+    "step": "Step 11: Heaps",
+    "topic": "11.3 Hard Problems",
+    "id": "255",
+    "name": "Maximum Sum Combination",
+    "videoId": "OyZFFqQtu98",
+    "foundTitle": "L8. Combination Sum | Recursion | Leetcode | C++ | Java"
+  },
+  {
+    "step": "Step 11: Heaps",
+    "topic": "11.3 Hard Problems",
+    "id": "256",
+    "name": "Find Median from Data Stream",
+    "videoId": "C2rRzz-JDk8",
+    "foundTitle": "BS 21: Median of two Sorted Arrays of Different Sizes | Brute and Better Approach"
+  },
+  {
+    "step": "Step 11: Heaps",
+    "topic": "11.3 Hard Problems",
+    "id": "257",
+    "name": "K most frequent elements",
+    "videoId": "teM9ZsVRQyc",
+    "foundTitle": "L6. Longest Substring With At Most K Distinct Characters | 2 Pointers and Sliding Window Playlist"
+  },
+  {
+    "step": "Step 17: Tries",
+    "topic": "17.1 Theory",
+    "id": "434",
+    "name": "Implement TRIE | INSERT | SEARCH | STARTSWITH",
+    "videoId": "dBGUmUQhjaM",
+    "foundTitle": "L1. Implement TRIE | INSERT | SEARCH | STARTSWITH"
+  },
+  {
+    "step": "Step 17: Tries",
+    "topic": "17.1 Theory",
+    "id": "435",
+    "name": "Implement Trie - 2 (Prefix Tree)",
+    "videoId": "K5pcpkEMCN0",
+    "foundTitle": "L2. Implement Trie-2 | INSERT | countWordsEqualTo() | countWordsStartingWith() | C++ | Java"
+  },
+  {
+    "step": "Step 17: Tries",
+    "topic": "17.2 Problems",
+    "id": "436",
+    "name": "Longest String with All Prefixes",
+    "videoId": "AWnBa91lThI",
+    "foundTitle": "L3. Longest Word With All Prefixes | Complete String | Trie"
+  },
+  {
+    "step": "Step 17: Tries",
+    "topic": "17.2 Problems",
+    "id": "437",
+    "name": "Number of Distinct Substrings in a String",
+    "videoId": "RV0QeTyHZxo",
+    "foundTitle": "L4. Number of Distinct Substrings in a String | Trie | C++ | Java"
+  },
+  {
+    "step": "Step 17: Tries",
+    "topic": "17.2 Problems",
+    "id": "438",
+    "name": "Bit PreRequisites for TRIE Problems",
+    "videoId": "5iyuU4hQFrw",
+    "foundTitle": "L5. Bit PreRequisites for TRIE Problems"
+  },
+  {
+    "step": "Step 17: Tries",
+    "topic": "17.2 Problems",
+    "id": "439",
+    "name": "Maximum XOR of two numbers in an array",
+    "videoId": "EIhAwfHubE8",
+    "foundTitle": "L6. Maximum XOR of Two Numbers in an Array | C++ | Java"
+  },
+  {
+    "step": "Step 17: Tries",
+    "topic": "17.2 Problems",
+    "id": "440",
+    "name": "Maximum XOR With an Element From Array",
+    "videoId": "Q8LhG9Pi5KM",
+    "foundTitle": "L7. Maximum XOR With an Element From Array | Queries | C++ | Java"
+  },
+  {
+    "step": "Step 18: Strings (Advanced)",
+    "topic": "18.1 Hard Problems",
+    "id": "441",
+    "name": "Minimum number of bracket reversals needed to make an expression balanced",
+    "videoId": "xwjS0iZhw4I",
+    "foundTitle": "L2. Check for Balanced Parentheses | Stack and Queue"
+  },
+  {
+    "step": "Step 18: Strings (Advanced)",
+    "topic": "18.1 Hard Problems",
+    "id": "442",
+    "name": "Count and Say",
+    "videoId": "Z-gBO2i2LhA",
+    "foundTitle": "Codeforces Round #643 | Count Triangles"
+  },
+  {
+    "step": "Step 18: Strings (Advanced)",
+    "topic": "18.1 Hard Problems",
+    "id": "443",
+    "name": "Hashing In Strings | Theory",
+    "videoId": "KEs5UyBJ39g",
+    "foundTitle": "Hashing | Maps | Time Complexity | Collisions | Division Rule of Hashing | Strivers A2Z DSA Course"
+  },
+  {
+    "step": "Step 18: Strings (Advanced)",
+    "topic": "18.1 Hard Problems",
+    "id": "444",
+    "name": "Rabin Karp",
+    "videoId": "EPx-ZDciIpc",
+    "foundTitle": "This Leetcode&#39;s feature is a scam ❌"
+  },
+  {
+    "step": "Step 18: Strings (Advanced)",
+    "topic": "18.1 Hard Problems",
+    "id": "445",
+    "name": "Z-Function",
+    "videoId": "69ZCDFy-OUo",
+    "foundTitle": "Re 3. Parameterised and Functional Recursion | Strivers A2Z DSA Course"
+  },
+  {
+    "step": "Step 18: Strings (Advanced)",
+    "topic": "18.1 Hard Problems",
+    "id": "446",
+    "name": "KMP algo / LPS(pi) array",
+    "videoId": "EPx-ZDciIpc",
+    "foundTitle": "This Leetcode&#39;s feature is a scam ❌"
+  },
+  {
+    "step": "Step 18: Strings (Advanced)",
+    "topic": "18.1 Hard Problems",
+    "id": "447",
+    "name": "Shortest Palindrome",
+    "videoId": "xPBLEj41rFU",
+    "foundTitle": "DP 29. Minimum Insertions to Make String Palindrome"
+  },
+  {
+    "step": "Step 18: Strings (Advanced)",
+    "topic": "18.1 Hard Problems",
+    "id": "448",
+    "name": "Longest happy prefix",
+    "videoId": "_wP9mWNPL5w",
+    "foundTitle": "DP 27. Longest Common Substring | DP on Strings 🔥"
+  },
+  {
+    "step": "Step 18: Strings (Advanced)",
+    "topic": "18.1 Hard Problems",
+    "id": "449",
+    "name": "Count palindromic subsequence in given string",
+    "videoId": "6i_T5kkfv4A",
+    "foundTitle": "DP 28. Longest Palindromic Subsequence"
+  }
+]

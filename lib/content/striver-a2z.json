@@ -1430,56 +1430,56 @@
               "name": "Introduction to Bit Manipulation",
               "leetcode": "",
               "gfg": "https://www.geeksforgeeks.org/problems/bit-manipulation-1666686020/1",
-              "youtube": ""
+              "youtube": "https://www.youtube.com/watch?v=qQd-ViW7bfk"
             },
             {
               "id": "182",
               "name": "Check if the i-th bit is set or not",
               "leetcode": "",
               "gfg": "https://www.geeksforgeeks.org/problems/check-whether-k-th-bit-is-set-or-not-1587115620/1",
-              "youtube": ""
+              "youtube": "https://www.youtube.com/watch?v=nttpF8kwgd4"
             },
             {
               "id": "183",
               "name": "Check if a number is odd or not",
               "leetcode": "",
               "gfg": "https://www.geeksforgeeks.org/check-whether-given-number-even-odd/",
-              "youtube": ""
+              "youtube": "https://www.youtube.com/watch?v=nttpF8kwgd4"
             },
             {
               "id": "184",
               "name": "Check if a number is power of 2 or not",
               "leetcode": "https://leetcode.com/problems/power-of-two/",
               "gfg": "",
-              "youtube": ""
+              "youtube": "https://www.youtube.com/watch?v=hFWckDXE-K8"
             },
             {
               "id": "185",
               "name": "Count the number of set bits",
               "leetcode": "https://leetcode.com/problems/number-of-1-bits/",
               "gfg": "",
-              "youtube": ""
+              "youtube": "https://www.youtube.com/watch?v=nttpF8kwgd4"
             },
             {
               "id": "186",
               "name": "Set/Unset the rightmost unset bit",
               "leetcode": "",
               "gfg": "https://www.geeksforgeeks.org/set-the-rightmost-unset-bit/",
-              "youtube": ""
+              "youtube": "https://www.youtube.com/watch?v=nttpF8kwgd4"
             },
             {
               "id": "187",
               "name": "Swap two numbers",
               "leetcode": "",
               "gfg": "https://www.geeksforgeeks.org/problems/swap-two-numbers3844/1",
-              "youtube": ""
+              "youtube": "https://www.youtube.com/watch?v=nttpF8kwgd4"
             },
             {
               "id": "188",
               "name": "Divide two integers without using multiplication, division and mod operator",
               "leetcode": "https://leetcode.com/problems/divide-two-integers/",
               "gfg": "",
-              "youtube": ""
+              "youtube": "https://www.youtube.com/watch?v=pBD4B1tzgVc"
             }
           ]
         },
@@ -1491,35 +1491,35 @@
               "name": "Count number of bits to be flipped to convert A to B",
               "leetcode": "https://leetcode.com/problems/minimum-bit-flips-to-convert-number/",
               "gfg": "",
-              "youtube": ""
+              "youtube": "https://www.youtube.com/watch?v=OOdrmcfZXd8"
             },
             {
               "id": "190",
               "name": "Find the number that appears odd number of times",
               "leetcode": "https://leetcode.com/problems/single-number/",
               "gfg": "",
-              "youtube": ""
+              "youtube": "https://www.youtube.com/watch?v=5Bb2nqA40JY"
             },
             {
               "id": "191",
               "name": "Power Set",
               "leetcode": "https://leetcode.com/problems/subsets/",
               "gfg": "",
-              "youtube": ""
+              "youtube": "https://www.youtube.com/watch?v=LqKaUv1G3_I"
             },
             {
               "id": "192",
               "name": "Find xor of numbers from L to R",
               "leetcode": "",
               "gfg": "https://www.geeksforgeeks.org/problems/find-xor-of-numbers-from-l-to-r/1",
-              "youtube": ""
+              "youtube": "https://www.youtube.com/watch?v=WqGb7159h7Q"
             },
             {
               "id": "193",
               "name": "Find the two numbers appearing odd number of times",
               "leetcode": "https://leetcode.com/problems/single-number-iii/",
               "gfg": "",
-              "youtube": ""
+              "youtube": "https://www.youtube.com/watch?v=5Bb2nqA40JY"
             }
           ]
         },
@@ -1531,35 +1531,35 @@
               "name": "Print Prime Factors of a Number",
               "leetcode": "",
               "gfg": "https://www.geeksforgeeks.org/problems/prime-factorization-1673687121/1",
-              "youtube": ""
+              "youtube": "https://www.youtube.com/watch?v=LT7XhVdeRyg"
             },
             {
               "id": "195",
               "name": "All Divisors of a Number",
               "leetcode": "",
               "gfg": "https://www.geeksforgeeks.org/problems/all-divisors-of-a-natural-number--141631/1",
-              "youtube": ""
+              "youtube": "https://www.youtube.com/watch?v=Ae_Ag_saG9s"
             },
             {
               "id": "196",
               "name": "Sieve of Eratosthenes",
               "leetcode": "https://leetcode.com/problems/count-primes/",
               "gfg": "",
-              "youtube": ""
+              "youtube": "https://www.youtube.com/watch?v=g5Fuxn_AvSk"
             },
             {
               "id": "197",
               "name": "Find Prime Factorisation of a Number using Sieve",
               "leetcode": "",
               "gfg": "https://www.geeksforgeeks.org/problems/prime-factorization-using-sieve/1",
-              "youtube": ""
+              "youtube": "https://www.youtube.com/watch?v=g5Fuxn_AvSk"
             },
             {
               "id": "198",
               "name": "Power(n, x)",
               "leetcode": "https://leetcode.com/problems/powx-n/",
               "gfg": "",
-              "youtube": ""
+              "youtube": "https://www.youtube.com/watch?v=hFWckDXE-K8"
             }
           ]
         }
@@ -3416,14 +3416,14 @@
               "name": "Implement TRIE | INSERT | SEARCH | STARTSWITH",
               "leetcode": "https://leetcode.com/problems/implement-trie-prefix-tree/",
               "gfg": "",
-              "youtube": ""
+              "youtube": "https://www.youtube.com/watch?v=dBGUmUQhjaM"
             },
             {
               "id": "435",
               "name": "Implement Trie - 2 (Prefix Tree)",
               "leetcode": "",
               "gfg": "https://www.geeksforgeeks.org/problems/trie-insert-and-search0651/1",
-              "youtube": ""
+              "youtube": "https://www.youtube.com/watch?v=K5pcpkEMCN0"
             }
           ]
         },
@@ -3435,35 +3435,35 @@
               "name": "Longest String with All Prefixes",
               "leetcode": "",
               "gfg": "https://www.geeksforgeeks.org/problems/complete-string/1",
-              "youtube": ""
+              "youtube": "https://www.youtube.com/watch?v=AWnBa91lThI"
             },
             {
               "id": "437",
               "name": "Number of Distinct Substrings in a String",
               "leetcode": "",
               "gfg": "https://www.geeksforgeeks.org/problems/count-of-distinct-substrings/1",
-              "youtube": ""
+              "youtube": "https://www.youtube.com/watch?v=RV0QeTyHZxo"
             },
             {
               "id": "438",
               "name": "Bit PreRequisites for TRIE Problems",
               "leetcode": "",
               "gfg": "https://www.geeksforgeeks.org/bitwise-operators-in-c-cpp/",
-              "youtube": ""
+              "youtube": "https://www.youtube.com/watch?v=5iyuU4hQFrw"
             },
             {
               "id": "439",
               "name": "Maximum XOR of two numbers in an array",
               "leetcode": "https://leetcode.com/problems/maximum-xor-of-two-numbers-in-an-array/",
               "gfg": "",
-              "youtube": ""
+              "youtube": "https://www.youtube.com/watch?v=EIhAwfHubE8"
             },
             {
               "id": "440",
               "name": "Maximum XOR With an Element From Array",
               "leetcode": "https://leetcode.com/problems/maximum-xor-with-an-element-from-array/",
               "gfg": "",
-              "youtube": ""
+              "youtube": "https://www.youtube.com/watch?v=Q8LhG9Pi5KM"
             }
           ]
         }
