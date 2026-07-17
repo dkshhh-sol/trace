@@ -24,7 +24,7 @@ export function HowItWorks() {
     >
       <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-28">
         <div className="mx-auto max-w-2xl text-center">
-          <p className="text-sm font-medium text-accent">How it works</p>
+          <p className="text-sm font-medium text-brand">How it works</p>
           <h2 className="mt-3 text-3xl tracking-tight sm:text-4xl">
             From lost to{" "}
             <span className="font-serif italic text-muted-foreground">
@@ -43,7 +43,7 @@ export function HowItWorks() {
               {i < steps.length - 1 && (
                 <div className="absolute left-6 top-12 hidden h-px w-[calc(100%-1rem)] bg-gradient-to-r from-white/15 to-transparent md:block" />
               )}
-              <div className="grid size-12 place-items-center rounded-xl border border-white/[0.08] bg-card font-serif text-lg text-accent">
+              <div className="grid size-12 place-items-center rounded-xl border border-white/[0.08] bg-card font-serif text-lg text-brand">
                 {s.step}
               </div>
               <h3 className="mt-5 text-lg font-semibold text-foreground">

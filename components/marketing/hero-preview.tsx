@@ -29,7 +29,7 @@ const problems = [
 export function HeroPreview() {
   return (
     <div className="relative mx-auto max-w-5xl">
-      <div className="absolute inset-x-8 -bottom-6 -z-10 h-24 rounded-full bg-accent/20 blur-3xl" />
+      <div className="absolute inset-x-8 -bottom-6 -z-10 h-24 rounded-full bg-brand/20 blur-3xl" />
       <div className="overflow-hidden rounded-2xl border border-white/10 bg-card shadow-2xl shadow-black/60">
         {/* Window chrome */}
         <div className="flex items-center gap-2 border-b border-white/[0.06] bg-white/[0.02] px-4 py-3">
@@ -101,7 +101,7 @@ export function HeroPreview() {
                     className="flex items-center gap-2.5 rounded-lg border border-white/[0.06] bg-white/[0.02] px-3 py-2"
                   >
                     {p.done ? (
-                      <CheckCircle2 className="size-4 shrink-0 text-accent" />
+                      <CheckCircle2 className="size-4 shrink-0 text-brand" />
                     ) : (
                       <Circle className="size-4 shrink-0 text-muted-foreground" />
                     )}
@@ -125,7 +125,7 @@ export function HeroPreview() {
                   <span>47%</span>
                 </div>
                 <div className="h-1.5 w-full overflow-hidden rounded-full bg-white/[0.06]">
-                  <div className="h-full w-[47%] rounded-full bg-gradient-to-r from-accent to-white" />
+                  <div className="h-full w-[47%] rounded-full bg-gradient-to-r from-brand to-white" />
                 </div>
               </div>
             </div>

@@ -44,7 +44,7 @@ export function Roadmaps() {
     <section id="roadmaps" className="scroll-mt-24">
       <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-28">
         <div className="mx-auto max-w-2xl text-center">
-          <p className="text-sm font-medium text-accent">Roadmaps</p>
+          <p className="text-sm font-medium text-brand">Roadmaps</p>
           <h2 className="mt-3 text-3xl tracking-tight sm:text-4xl">
             Start with Striver A2Z.{" "}
             <span className="font-serif italic text-muted-foreground">
@@ -63,7 +63,7 @@ export function Roadmaps() {
               key={r.title}
               className={`group relative overflow-hidden rounded-2xl border p-6 transition-colors ${
                 r.available
-                  ? "border-accent/30 bg-gradient-to-b from-accent/[0.08] to-card hover:border-accent/50"
+                  ? "border-brand/30 bg-gradient-to-b from-brand/[0.08] to-card hover:border-brand/50"
                   : "border-white/[0.06] bg-card hover:border-white/[0.12]"
               }`}
             >
@@ -71,12 +71,12 @@ export function Roadmaps() {
                 <span
                   className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-medium ${
                     r.available
-                      ? "bg-accent/15 text-accent"
+                      ? "bg-brand/15 text-brand"
                       : "bg-white/[0.05] text-muted-foreground"
                   }`}
                 >
                   {r.available && (
-                    <span className="size-1.5 rounded-full bg-accent" />
+                    <span className="size-1.5 rounded-full bg-brand" />
                   )}
                   {r.tag}
                 </span>

@@ -45,7 +45,7 @@ export function Features() {
     <section id="features" className="scroll-mt-24">
       <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-28">
         <div className="mx-auto max-w-2xl text-center">
-          <p className="text-sm font-medium text-accent">Everything in one place</p>
+          <p className="text-sm font-medium text-brand">Everything in one place</p>
           <h2 className="mt-3 text-3xl tracking-tight sm:text-4xl">
             A complete prep workspace,{" "}
             <span className="font-serif italic text-muted-foreground">
@@ -64,7 +64,7 @@ export function Features() {
               key={feature.title}
               className="group rounded-2xl border border-white/[0.06] bg-card p-6 transition-colors hover:border-white/[0.12]"
             >
-              <div className="grid size-11 place-items-center rounded-xl border border-white/[0.08] bg-gradient-to-b from-white/[0.06] to-transparent text-accent transition-transform group-hover:scale-105">
+              <div className="grid size-11 place-items-center rounded-xl border border-white/[0.08] bg-gradient-to-b from-white/[0.06] to-transparent text-brand transition-transform group-hover:scale-105">
                 <feature.icon className="size-5" />
               </div>
               <h3 className="mt-5 text-base font-semibold text-foreground">

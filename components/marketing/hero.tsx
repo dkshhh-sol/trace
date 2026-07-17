@@ -8,13 +8,13 @@ export function Hero() {
       {/* Decorative backdrop */}
       <div className="pointer-events-none absolute inset-0 -z-10">
         <div className="absolute inset-0 bg-grid mask-radial" />
-        <div className="absolute left-1/2 top-[-10%] h-[520px] w-[820px] -translate-x-1/2 rounded-full bg-accent/20 blur-[130px]" />
+        <div className="absolute left-1/2 top-[-10%] h-[520px] w-[820px] -translate-x-1/2 rounded-full bg-brand/20 blur-[130px]" />
       </div>
 
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <div className="mx-auto max-w-3xl text-center">
           <div className="animate-rise inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-xs text-muted-foreground">
-            <span className="size-1.5 rounded-full bg-accent" />
+            <span className="size-1.5 rounded-full bg-brand" />
             Now in early access — v1.0
           </div>
 
