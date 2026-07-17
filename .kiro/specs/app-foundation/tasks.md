@@ -101,7 +101,7 @@ Tasks are grouped into waves; tasks within a wave can proceed in parallel, and e
   - `app/(dashboard)/dashboard/page.tsx`: compose all eight, each wrapped in `<Suspense>`.
   - _Requirements: 8.3, 8.4, 8.5, 9.1, 9.5, 9.6, 10.1_
 
-- [ ] 9. Implement the Sanity content client
+- [x] 9. Implement the Sanity content client
   - `lib/sanity/client.ts`: configured `@sanity/client` from `NEXT_PUBLIC_SANITY_*` + server token, `useCdn: true`.
   - `lib/sanity/queries.ts`: typed `sanityFetch<T>()` and a `healthCheck()` with a 5s bound returning reachable/unreachable.
   - `lib/sanity/types.ts`: initial content type placeholders.
