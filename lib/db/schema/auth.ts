@@ -58,6 +58,13 @@ export const sessions = pgTable("sessions", {
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
   expires: timestamp("expires", { withTimezone: true, mode: "date" }).notNull(),
+  // Records when the session was first created. The adapter maintains `expires`
+  // as a rolling 30-minute inactivity window; `createdAt` is fixed at creation
+  // so the auth `session` callback can enforce a 7-day absolute lifetime cap
+  // independent of activity (Requirement 3.1).
+  createdAt: timestamp("created_at", { withTimezone: true, mode: "date" })
+    .notNull()
+    .defaultNow(),
 });
 
 export const verificationTokens = pgTable(

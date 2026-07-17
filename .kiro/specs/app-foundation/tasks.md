@@ -54,17 +54,17 @@ Tasks are grouped into waves; tasks within a wave can proceed in parallel, and e
   - Run `db:generate` then `db:migrate`; confirm tables exist on the Neon branch.
   - _Requirements: 6.1, 6.2_
 
-- [ ] 4. Implement authentication
-- [ ] 4.1 Auth.js configuration and instance
+- [x] 4. Implement authentication
+- [x] 4.1 Auth.js configuration and instance
   - `lib/auth/config.ts`: Google provider from env, `DrizzleAdapter`, `session` strategy `database` with `maxAge` 30 min and `updateAge` 5 min, `pages.signIn = "/login"`.
   - Add a `session` callback enforcing the 7-day absolute cap; `events.createUser` to insert the default `user_settings` row; `events.signIn` to set `lastLogin`.
   - `lib/auth/index.ts`: export `handlers`, `auth`, `signIn`, `signOut`.
   - _Requirements: 1.1, 1.3, 1.4, 1.7, 3.1, 4.1, 4.2, 4.3, 4.4, 4.5, 4.6_
-- [ ] 4.2 Auth route handler and guards
+- [x] 4.2 Auth route handler and guards
   - `app/api/auth/[...nextauth]/route.ts`: export `{ GET, POST } = handlers`.
   - `lib/auth/guards.ts`: `getSession()` and `requireSession()` (redirect to `/login` when unauthenticated).
   - _Requirements: 1.2, 2.1, 2.2, 2.3, 3.2_
-- [ ] 4.3 Sign-in / sign-out server actions and login page
+- [x] 4.3 Sign-in / sign-out server actions and login page
   - `app/login/page.tsx`: public Server Component with a Google sign-in form (server action wrapping `signIn("google")`), rendering `?error=` states for failure/cancel/timeout.
   - Sign-out server action calling `signOut({ redirectTo: "/" })`.
   - _Requirements: 1.5, 1.6, 3.3, 3.4, 3.6_
