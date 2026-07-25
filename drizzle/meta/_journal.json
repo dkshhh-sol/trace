@@ -22,6 +22,13 @@
       "when": 1784997668228,
       "tag": "0002_gigantic_elektra",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1784998958198,
+      "tag": "0003_wealthy_yellow_claw",
+      "breakpoints": true
     }
   ]
 }

@@ -1,7 +1,21 @@
+import type { GoalPeriod } from "@/lib/db/schema/goals";
+
 export type HeatmapDay = {
   date: string; // YYYY-MM-DD (UTC)
   count: number;
   topics: string[];
+  byDifficulty: { easy: number; medium: number; hard: number };
+};
+
+export type GoalView = {
+  id: string;
+  title: string;
+  targetCount: number;
+  period: GoalPeriod;
+  done: number;
+  pct: number;
+  remaining: number;
+  complete: boolean;
 };
 
 export type ProfileStats = {
@@ -10,9 +24,8 @@ export type ProfileStats = {
   image: string | null;
   joinedAt: string; // ISO
 
-  // Goals (persisted)
-  dailyGoal: number;
-  weeklyGoal: number;
+  // Goals (persisted rows + derived progress)
+  goals: GoalView[];
 
   // Activity (derived from solves)
   solved: number;
@@ -26,5 +39,7 @@ export type ProfileStats = {
   avgPerActiveDay: number;
   solvedToday: number;
   solvedThisWeek: number;
+  solvedThisMonth: number;
+  solvedThisYear: number;
   heatmap: HeatmapDay[];
 };

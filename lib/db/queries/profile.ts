@@ -3,8 +3,9 @@ import "server-only";
 import { eq } from "drizzle-orm";
 import { db } from "../client";
 import { users } from "../schema";
-import { getUserGoals, getUserSolves } from "./activity";
-import { computeActivity } from "@/lib/progress/compute";
+import { getUserSolves } from "./activity";
+import { getGoals } from "./goals";
+import { computeActivity, computeGoalProgress } from "@/lib/progress/compute";
 import { striverA2Z } from "@/lib/content/striver";
 import type { ProfileStats } from "@/lib/profile/types";
 
@@ -22,18 +23,18 @@ export async function getProfileStats(userId: string): Promise<ProfileStats> {
       .where(eq(users.id, userId))
       .limit(1),
     getUserSolves(userId, striverA2Z.slug),
-    getUserGoals(userId),
+    getGoals(userId),
   ]);
 
   const activity = computeActivity(solves, 365);
+  const goalProgress = computeGoalProgress(solves, goals);
 
   return {
     name: userRow?.name ?? null,
     email: userRow?.email ?? null,
     image: userRow?.image ?? null,
     joinedAt: (userRow?.createdAt ?? new Date()).toISOString(),
-    dailyGoal: goals.daily,
-    weeklyGoal: goals.weekly,
+    goals: goalProgress,
     ...activity,
   };
 }

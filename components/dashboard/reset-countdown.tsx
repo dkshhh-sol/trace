@@ -1,43 +1,50 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import type { GoalPeriod } from "@/lib/db/schema/goals";
 
 /**
- * Live countdown to the next reset. Daily counters reset at UTC midnight,
- * weekly counters at the start of Monday (UTC) — matching how solves are
- * bucketed server-side.
+ * Live countdown to the next reset. Counters reset at the start of the next
+ * period window (UTC), matching how solves are bucketed server-side:
+ * daily → UTC midnight, weekly → Monday, monthly → 1st, yearly → Jan 1.
  */
-export function ResetCountdown({ type }: { type: "daily" | "weekly" }) {
+export function ResetCountdown({ period }: { period: GoalPeriod }) {
   const [label, setLabel] = useState("");
 
   useEffect(() => {
+    function nextReset(now: Date): Date {
+      const y = now.getUTCFullYear();
+      const m = now.getUTCMonth();
+      const day = now.getUTCDate();
+      switch (period) {
+        case "daily":
+          return new Date(Date.UTC(y, m, day + 1));
+        case "weekly": {
+          const dow = now.getUTCDay(); // 0 Sun..6 Sat
+          const daysUntilMonday = (8 - dow) % 7 || 7;
+          return new Date(Date.UTC(y, m, day + daysUntilMonday));
+        }
+        case "monthly":
+          return new Date(Date.UTC(y, m + 1, 1));
+        case "yearly":
+          return new Date(Date.UTC(y + 1, 0, 1));
+      }
+    }
+
     function compute() {
       const now = new Date();
-      const target = new Date(
-        Date.UTC(
-          now.getUTCFullYear(),
-          now.getUTCMonth(),
-          now.getUTCDate() + 1,
-        ),
-      );
-      if (type === "weekly") {
-        // next Monday 00:00 UTC
-        const dow = now.getUTCDay(); // 0 Sun..6 Sat
-        const daysUntilMonday = ((8 - dow) % 7) || 7;
-        target.setUTCDate(now.getUTCDate() + daysUntilMonday);
-        target.setUTCHours(0, 0, 0, 0);
-      }
-      const ms = target.getTime() - now.getTime();
+      const ms = nextReset(now).getTime() - now.getTime();
       const totalMin = Math.max(0, Math.floor(ms / 60000));
       const days = Math.floor(totalMin / 1440);
       const hours = Math.floor((totalMin % 1440) / 60);
       const mins = totalMin % 60;
       setLabel(days > 0 ? `${days}d ${hours}h` : `${hours}h ${mins}m`);
     }
+
     compute();
     const id = setInterval(compute, 60_000);
     return () => clearInterval(id);
-  }, [type]);
+  }, [period]);
 
   return <span>{label}</span>;
 }

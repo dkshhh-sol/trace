@@ -1,12 +1,19 @@
 import "server-only";
 
+import { cache } from "react";
 import { and, eq, like } from "drizzle-orm";
 import { db } from "@/lib/db/client";
-import { progress, userSettings } from "@/lib/db/schema";
+import { progress } from "@/lib/db/schema";
 import type { Solve } from "@/lib/progress/compute";
 
-/** All completed solves (problemId + completedAt) for a roadmap. */
-export async function getUserSolves(
+/**
+ * All completed solves (problemId + completedAt) for a roadmap.
+ *
+ * Wrapped in React `cache()` so that multiple server components in the same
+ * request (e.g. the dashboard's goals card and activity widget) share a single
+ * database round-trip and a single aggregation pass instead of recomputing.
+ */
+export const getUserSolves = cache(async function getUserSolves(
   userId: string,
   roadmapSlug: string,
 ): Promise<Solve[]> {
@@ -29,26 +36,4 @@ export async function getUserSolves(
     problemId: r.sid.slice(prefixLen),
     completedAt: r.completedAt,
   }));
-}
-
-export type Goals = { daily: number; weekly: number };
-
-const DEFAULT_GOALS: Goals = { daily: 2, weekly: 14 };
-
-/** The user's daily/weekly goals, falling back to sensible defaults. */
-export async function getUserGoals(userId: string): Promise<Goals> {
-  const [row] = await db
-    .select({
-      daily: userSettings.dailyGoal,
-      weekly: userSettings.weeklyGoal,
-    })
-    .from(userSettings)
-    .where(eq(userSettings.userId, userId))
-    .limit(1);
-
-  if (!row) return DEFAULT_GOALS;
-  return {
-    daily: row.daily ?? DEFAULT_GOALS.daily,
-    weekly: row.weekly ?? DEFAULT_GOALS.weekly,
-  };
-}
+});

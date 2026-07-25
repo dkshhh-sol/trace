@@ -11,15 +11,15 @@ import {
   Layers,
   TrendingUp,
   Lock,
-  Pencil,
   Check,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { signOutAction } from "@/lib/auth/actions";
-import { updateGoals } from "@/lib/progress/actions";
-import { Heatmap, HeatmapLegend } from "./heatmap";
+import { ContributionCalendar, HeatmapLegend } from "./contribution-calendar";
+import { EditGoalsButton } from "./edit-goals-modal";
 import { CountUp } from "./count-up";
-import type { ProfileStats } from "@/lib/profile/types";
+import type { GoalPeriod } from "@/lib/db/schema/goals";
+import type { GoalView, ProfileStats } from "@/lib/profile/types";
 
 type SessionUser = {
   name?: string | null;
@@ -44,16 +44,11 @@ export function ProfilePanel({ user }: { user: SessionUser }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [imgError, setImgError] = useState(false);
-  const [editing, setEditing] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
 
-  const open = useCallback(() => {
-    setMounted(true);
-    requestAnimationFrame(() => setShow(true));
+  const loadStats = useCallback(() => {
     setError(false);
-    setLoading(true);
-    setStats(null);
     fetch("/api/profile")
       .then((r) => (r.ok ? r.json() : Promise.reject(new Error("failed"))))
       .then((data: ProfileStats) => setStats(data))
@@ -61,9 +56,16 @@ export function ProfilePanel({ user }: { user: SessionUser }) {
       .finally(() => setLoading(false));
   }, []);
 
+  const open = useCallback(() => {
+    setMounted(true);
+    requestAnimationFrame(() => setShow(true));
+    setLoading(true);
+    setStats(null);
+    loadStats();
+  }, [loadStats]);
+
   const close = useCallback(() => {
     setShow(false);
-    setEditing(false);
     setTimeout(() => setMounted(false), 260);
     triggerRef.current?.focus();
   }, []);
@@ -168,7 +170,7 @@ export function ProfilePanel({ user }: { user: SessionUser }) {
                     <>
                       <ActivitySection stats={stats} empty={solvedZero} />
                       <Statistics stats={stats} />
-                      <Goals stats={stats} onEdit={() => setEditing(true)} />
+                      <Goals goals={stats.goals} onChanged={loadStats} />
                     </>
                   )}
 
@@ -182,20 +184,6 @@ export function ProfilePanel({ user }: { user: SessionUser }) {
               <SignOutButton />
             </footer>
           </aside>
-
-          {editing && stats && (
-            <EditGoalsModal
-              daily={stats.dailyGoal}
-              weekly={stats.weeklyGoal}
-              onCancel={() => setEditing(false)}
-              onSaved={(daily, weekly) => {
-                setStats((prev) =>
-                  prev ? { ...prev, dailyGoal: daily, weeklyGoal: weekly } : prev,
-                );
-                setEditing(false);
-              }}
-            />
-          )}
         </div>
       )}
     </>
@@ -262,13 +250,17 @@ function ActivitySection({
       <h3 className="mb-3 text-sm font-medium text-foreground">
         Learning activity
       </h3>
-      <Heatmap days={stats.heatmap} />
+      <ContributionCalendar
+        days={stats.heatmap}
+        variant="compact"
+        currentStreak={stats.currentStreak}
+      />
       <div className="mt-3">
         <HeatmapLegend />
       </div>
       {empty && (
         <p className="mt-3 text-sm text-muted-foreground">
-          Start solving problems to build your learning streak.
+          Start solving problems to build your learning history.
         </p>
       )}
     </section>
@@ -304,39 +296,40 @@ function Statistics({ stats }: { stats: ProfileStats }) {
   );
 }
 
-function GoalBar({
-  label,
-  value,
-  goal,
-}: {
-  label: string;
-  value: number;
-  goal: number;
-}) {
-  const pct = goal > 0 ? Math.min(100, Math.round((value / goal) * 100)) : 0;
-  const remaining = Math.max(0, goal - value);
-  const complete = value >= goal && goal > 0;
+const PERIOD_LABEL: Record<GoalPeriod, string> = {
+  daily: "Daily",
+  weekly: "Weekly",
+  monthly: "Monthly",
+  yearly: "Yearly",
+};
+
+function GoalBar({ goal }: { goal: GoalView }) {
   return (
     <div>
-      <div className="mb-1.5 flex items-center justify-between text-xs">
-        <span className="text-muted-foreground">{label}</span>
-        <span className="tabular-nums text-foreground">
-          {value} / {goal}
+      <div className="mb-1.5 flex items-center justify-between gap-3 text-xs">
+        <span className="flex min-w-0 items-center gap-2">
+          <span className="truncate text-foreground">{goal.title}</span>
+          <span className="shrink-0 rounded-full bg-white/[0.06] px-1.5 py-0.5 text-[9px] font-medium uppercase tracking-wide text-muted-foreground">
+            {PERIOD_LABEL[goal.period]}
+          </span>
+        </span>
+        <span className="shrink-0 tabular-nums text-foreground">
+          {goal.done} / {goal.targetCount}
         </span>
       </div>
       <div className="h-2 w-full overflow-hidden rounded-full bg-white/[0.06]">
         <div
           className="h-full rounded-full bg-gradient-to-r from-brand to-[#b9b3ff] transition-[width] duration-700 ease-out"
-          style={{ width: `${pct}%` }}
+          style={{ width: `${goal.pct}%` }}
         />
       </div>
       <p className="mt-1 text-[11px]">
-        {complete ? (
-          <span className="inline-flex items-center gap-1 text-success">
-            <Check className="size-3 animate-pulse" /> Goal completed
+        {goal.complete ? (
+          <span className="inline-flex items-center gap-1 text-brand motion-safe:animate-pulse">
+            <Check className="size-3" /> Goal completed
           </span>
         ) : (
-          <span className="text-muted-foreground">{remaining} to go</span>
+          <span className="text-muted-foreground">{goal.remaining} to go</span>
         )}
       </p>
     </div>
@@ -344,141 +337,39 @@ function GoalBar({
 }
 
 function Goals({
-  stats,
-  onEdit,
+  goals,
+  onChanged,
 }: {
-  stats: ProfileStats;
-  onEdit: () => void;
+  goals: GoalView[];
+  onChanged: () => void;
 }) {
   return (
     <section>
       <div className="mb-3 flex items-center justify-between">
         <h3 className="text-sm font-medium text-foreground">Goals</h3>
-        <button
-          type="button"
-          onClick={onEdit}
-          className="inline-flex items-center gap-1.5 rounded-lg px-2 py-1 text-xs text-muted-foreground outline-none transition-colors hover:bg-accent hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
-        >
-          <Pencil className="size-3" />
-          Edit goals
-        </button>
-      </div>
-      <div className="space-y-4">
-        <GoalBar label="Today" value={stats.solvedToday} goal={stats.dailyGoal} />
-        <GoalBar
-          label="This week"
-          value={stats.solvedThisWeek}
-          goal={stats.weeklyGoal}
+        <EditGoalsButton
+          goals={goals.map((g) => ({
+            id: g.id,
+            title: g.title,
+            targetCount: g.targetCount,
+            period: g.period,
+          }))}
+          onChanged={onChanged}
         />
       </div>
+      {goals.length === 0 ? (
+        <p className="text-xs text-muted-foreground">
+          No goals yet. Choose{" "}
+          <span className="text-foreground">Edit goals</span> to set a target.
+        </p>
+      ) : (
+        <div className="space-y-4">
+          {goals.map((g) => (
+            <GoalBar key={g.id} goal={g} />
+          ))}
+        </div>
+      )}
     </section>
-  );
-}
-
-function EditGoalsModal({
-  daily,
-  weekly,
-  onCancel,
-  onSaved,
-}: {
-  daily: number;
-  weekly: number;
-  onCancel: () => void;
-  onSaved: (daily: number, weekly: number) => void;
-}) {
-  const [d, setD] = useState(String(daily));
-  const [w, setW] = useState(String(weekly));
-  const [pending, startTransition] = useTransition();
-  const [err, setErr] = useState<string | null>(null);
-
-  useEffect(() => {
-    function onKey(e: KeyboardEvent) {
-      if (e.key === "Escape") onCancel();
-    }
-    document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
-  }, [onCancel]);
-
-  function save() {
-    const dn = Number(d);
-    const wn = Number(w);
-    if (!Number.isFinite(dn) || dn < 1 || !Number.isFinite(wn) || wn < 1) {
-      setErr("Enter values of 1 or more.");
-      return;
-    }
-    setErr(null);
-    startTransition(async () => {
-      try {
-        const saved = await updateGoals({ daily: dn, weekly: wn });
-        onSaved(saved.daily, saved.weekly);
-      } catch {
-        setErr("Couldn't save. Please try again.");
-      }
-    });
-  }
-
-  return (
-    <div className="absolute inset-0 z-[80] grid place-items-center p-4">
-      <div
-        aria-hidden="true"
-        onClick={onCancel}
-        className="absolute inset-0 bg-black/50 backdrop-blur-sm"
-      />
-      <div
-        role="dialog"
-        aria-modal="true"
-        aria-label="Edit goals"
-        className="animate-in fade-in-0 zoom-in-95 surface relative w-full max-w-xs rounded-2xl p-5 duration-150"
-      >
-        <h3 className="text-base font-medium text-foreground">Edit goals</h3>
-        <div className="mt-4 space-y-4">
-          <label className="block">
-            <span className="text-xs text-muted-foreground">
-              Daily goal (problems / day)
-            </span>
-            <input
-              type="number"
-              min={1}
-              max={100}
-              value={d}
-              onChange={(e) => setD(e.target.value)}
-              className="mt-1.5 h-10 w-full rounded-lg border border-border bg-card px-3 text-sm text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring"
-            />
-          </label>
-          <label className="block">
-            <span className="text-xs text-muted-foreground">
-              Weekly goal (problems / week)
-            </span>
-            <input
-              type="number"
-              min={1}
-              max={700}
-              value={w}
-              onChange={(e) => setW(e.target.value)}
-              className="mt-1.5 h-10 w-full rounded-lg border border-border bg-card px-3 text-sm text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring"
-            />
-          </label>
-          {err && <p className="text-xs text-destructive">{err}</p>}
-        </div>
-        <div className="mt-5 flex justify-end gap-2">
-          <button
-            type="button"
-            onClick={onCancel}
-            className="inline-flex h-9 items-center rounded-lg px-3 text-sm text-muted-foreground transition-colors hover:text-foreground"
-          >
-            Cancel
-          </button>
-          <button
-            type="button"
-            onClick={save}
-            disabled={pending}
-            className="inline-flex h-9 items-center rounded-lg bg-foreground px-4 text-sm font-medium text-background transition-transform hover:scale-[1.02] active:scale-[0.99] disabled:opacity-60"
-          >
-            {pending ? "Saving…" : "Save"}
-          </button>
-        </div>
-      </div>
-    </div>
   );
 }
 

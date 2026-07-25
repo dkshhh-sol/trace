@@ -1,4 +1,5 @@
 import { striverA2Z } from "@/lib/content/striver";
+import type { GoalPeriod } from "@/lib/db/schema/goals";
 import type { HeatmapDay } from "@/lib/profile/types";
 
 /**
@@ -9,31 +10,71 @@ import type { HeatmapDay } from "@/lib/profile/types";
 
 export type Solve = { problemId: string; completedAt: Date | null };
 
+export type Difficulty = "easy" | "medium" | "hard";
+
 // Content maps built once per process.
 const problemToTopic = new Map<string, string>();
+const problemToDifficulty = new Map<string, Difficulty>();
 const topicProblemIds: { topic: string; ids: string[] }[] = [];
+
+/**
+ * Derive a problem's difficulty from its topic name. The Striver content has
+ * no per-problem difficulty field, so we parse topic labels like "3.1 Easy",
+ * "10.2 Hard Problems", "6.3 Medium Problems of LL". Ambiguous labels such as
+ * "12.2 Medium/Hard Problems" yield no difficulty (honest partial coverage).
+ */
+function difficultyFromTopic(topicName: string): Difficulty | null {
+  const easy = /\beasy\b/i.test(topicName);
+  const medium = /\bmedium\b/i.test(topicName);
+  const hard = /\bhard\b/i.test(topicName);
+  const hits = [easy, medium, hard].filter(Boolean).length;
+  if (hits !== 1) return null; // none, or ambiguous ("Medium/Hard")
+  if (easy) return "easy";
+  if (medium) return "medium";
+  return "hard";
+}
+
 for (const step of striverA2Z.steps) {
   for (const topic of step.topics) {
     const ids = topic.problems.map((p) => p.id);
     topicProblemIds.push({ topic: topic.name, ids });
-    for (const p of topic.problems) problemToTopic.set(p.id, topic.name);
+    const diff = difficultyFromTopic(topic.name);
+    for (const p of topic.problems) {
+      problemToTopic.set(p.id, topic.name);
+      if (diff) problemToDifficulty.set(p.id, diff);
+    }
   }
 }
 
 export const TOTAL_PROBLEMS = striverA2Z.totalProblems;
 export const TOTAL_TOPICS = topicProblemIds.length;
 
+/** Public helper: a problem's derived difficulty, or null when unknown. */
+export function problemDifficulty(problemId: string): Difficulty | null {
+  return problemToDifficulty.get(problemId) ?? null;
+}
+
 export const dayKey = (d: Date) => d.toISOString().slice(0, 10);
 
-/** Monday 00:00 UTC of the week containing `now`. */
-function startOfWeekMonday(now: Date): Date {
-  const d = new Date(
-    Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()),
-  );
-  const dow = d.getUTCDay(); // 0=Sun..6=Sat
-  const diff = (dow + 6) % 7; // days since Monday
-  d.setUTCDate(d.getUTCDate() - diff);
-  return d;
+/** Start of the current period window (UTC), for a given `now`. */
+export function periodStart(period: GoalPeriod, now: Date): Date {
+  const y = now.getUTCFullYear();
+  const m = now.getUTCMonth();
+  const day = now.getUTCDate();
+  switch (period) {
+    case "daily":
+      return new Date(Date.UTC(y, m, day));
+    case "weekly": {
+      const d = new Date(Date.UTC(y, m, day));
+      const dow = d.getUTCDay(); // 0=Sun..6=Sat
+      d.setUTCDate(d.getUTCDate() - ((dow + 6) % 7)); // back to Monday
+      return d;
+    }
+    case "monthly":
+      return new Date(Date.UTC(y, m, 1));
+    case "yearly":
+      return new Date(Date.UTC(y, 0, 1));
+  }
 }
 
 function computeStreaks(dates: Set<string>): {
@@ -75,6 +116,8 @@ export type Activity = {
   avgPerActiveDay: number;
   solvedToday: number;
   solvedThisWeek: number;
+  solvedThisMonth: number;
+  solvedThisYear: number;
   heatmap: HeatmapDay[];
 };
 
@@ -84,7 +127,10 @@ export type Activity = {
  */
 export function computeActivity(solves: Solve[], heatmapDays: number): Activity {
   const completedIds = new Set<string>();
-  const perDay = new Map<string, { count: number; topics: Set<string> }>();
+  const perDay = new Map<
+    string,
+    { count: number; topics: Set<string>; easy: number; medium: number; hard: number }
+  >();
   const activeDates = new Set<string>();
 
   for (const s of solves) {
@@ -92,10 +138,14 @@ export function computeActivity(solves: Solve[], heatmapDays: number): Activity 
     if (s.completedAt) {
       const key = dayKey(s.completedAt);
       activeDates.add(key);
-      const bucket = perDay.get(key) ?? { count: 0, topics: new Set<string>() };
+      const bucket =
+        perDay.get(key) ??
+        { count: 0, topics: new Set<string>(), easy: 0, medium: 0, hard: 0 };
       bucket.count++;
       const topic = problemToTopic.get(s.problemId);
       if (topic) bucket.topics.add(topic);
+      const diff = problemToDifficulty.get(s.problemId);
+      if (diff) bucket[diff]++;
       perDay.set(key, bucket);
     }
   }
@@ -113,10 +163,16 @@ export function computeActivity(solves: Solve[], heatmapDays: number): Activity 
   const todayKey = dayKey(now);
   const solvedToday = perDay.get(todayKey)?.count ?? 0;
 
-  const weekStart = dayKey(startOfWeekMonday(now));
+  const weekStart = dayKey(periodStart("weekly", now));
+  const monthStart = dayKey(periodStart("monthly", now));
+  const yearStart = dayKey(periodStart("yearly", now));
   let solvedThisWeek = 0;
+  let solvedThisMonth = 0;
+  let solvedThisYear = 0;
   for (const [key, bucket] of perDay) {
     if (key >= weekStart) solvedThisWeek += bucket.count;
+    if (key >= monthStart) solvedThisMonth += bucket.count;
+    if (key >= yearStart) solvedThisYear += bucket.count;
   }
 
   const activeDays = activeDates.size;
@@ -138,6 +194,11 @@ export function computeActivity(solves: Solve[], heatmapDays: number): Activity 
       date: key,
       count: bucket?.count ?? 0,
       topics: bucket ? [...bucket.topics] : [],
+      byDifficulty: {
+        easy: bucket?.easy ?? 0,
+        medium: bucket?.medium ?? 0,
+        hard: bucket?.hard ?? 0,
+      },
     });
   }
 
@@ -153,6 +214,63 @@ export function computeActivity(solves: Solve[], heatmapDays: number): Activity 
     avgPerActiveDay,
     solvedToday,
     solvedThisWeek,
+    solvedThisMonth,
+    solvedThisYear,
     heatmap,
   };
+}
+
+export type GoalInput = {
+  id: string;
+  title: string;
+  targetCount: number;
+  period: GoalPeriod;
+};
+
+export type GoalProgress = GoalInput & {
+  done: number;
+  pct: number;
+  remaining: number;
+  complete: boolean;
+};
+
+/**
+ * Derive per-goal progress from solves. `done` counts solves whose
+ * `completedAt` falls inside the goal's current period window. Only progress
+ * resets by period; the goal row itself persists.
+ */
+export function computeGoalProgress(
+  solves: Solve[],
+  goals: GoalInput[],
+  now: Date = new Date(),
+): GoalProgress[] {
+  const starts: Record<GoalPeriod, string> = {
+    daily: dayKey(periodStart("daily", now)),
+    weekly: dayKey(periodStart("weekly", now)),
+    monthly: dayKey(periodStart("monthly", now)),
+    yearly: dayKey(periodStart("yearly", now)),
+  };
+
+  const perPeriod: Record<GoalPeriod, number> = {
+    daily: 0,
+    weekly: 0,
+    monthly: 0,
+    yearly: 0,
+  };
+  for (const s of solves) {
+    if (!s.completedAt) continue;
+    const key = dayKey(s.completedAt);
+    if (key >= starts.daily) perPeriod.daily++;
+    if (key >= starts.weekly) perPeriod.weekly++;
+    if (key >= starts.monthly) perPeriod.monthly++;
+    if (key >= starts.yearly) perPeriod.yearly++;
+  }
+
+  return goals.map((g) => {
+    const done = perPeriod[g.period];
+    const pct =
+      g.targetCount > 0 ? Math.min(100, Math.round((done / g.targetCount) * 100)) : 0;
+    const remaining = Math.max(0, g.targetCount - done);
+    return { ...g, done, pct, remaining, complete: g.targetCount > 0 && done >= g.targetCount };
+  });
 }
