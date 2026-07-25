@@ -10,6 +10,7 @@ import {
   CheckCircle2,
   Layers,
   TrendingUp,
+  Lock,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { signOutAction } from "@/lib/auth/actions";
@@ -46,8 +47,9 @@ export function ProfilePanel({ user }: { user: SessionUser }) {
     requestAnimationFrame(() => setShow(true));
     setError(false);
     setLoading(true);
+    setStats(null);
     fetch("/api/profile")
-      .then((r) => (r.ok ? r.json() : Promise.reject()))
+      .then((r) => (r.ok ? r.json() : Promise.reject(new Error("failed"))))
       .then((data: ProfileStats) => setStats(data))
       .catch(() => setError(true))
       .finally(() => setLoading(false));
@@ -65,8 +67,14 @@ export function ProfilePanel({ user }: { user: SessionUser }) {
       if (e.key === "Escape") close();
     }
     document.addEventListener("keydown", onKey);
+    // lock body scroll while open
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
     closeRef.current?.focus();
-    return () => document.removeEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prevOverflow;
+    };
   }, [mounted, close]);
 
   return (
@@ -94,10 +102,10 @@ export function ProfilePanel({ user }: { user: SessionUser }) {
       </button>
 
       {mounted && (
-        <div className="fixed inset-0 z-[60]">
+        <div className="fixed inset-0 z-[70]">
           {/* Backdrop */}
-          <button
-            aria-label="Close profile"
+          <div
+            aria-hidden="true"
             onClick={close}
             className={cn(
               "absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-300",
@@ -105,19 +113,18 @@ export function ProfilePanel({ user }: { user: SessionUser }) {
             )}
           />
 
-          {/* Panel */}
+          {/* Panel: header / scrollable body / pinned footer */}
           <aside
             role="dialog"
             aria-modal="true"
             aria-label="Your profile"
             className={cn(
-              "absolute inset-y-0 right-0 flex w-full max-w-md flex-col overflow-y-auto border-l border-border bg-background shadow-2xl transition-transform duration-300 ease-out",
+              "absolute right-0 top-0 flex h-dvh w-full max-w-md flex-col border-l border-border bg-background shadow-2xl transition-transform duration-300 ease-out",
               show ? "translate-x-0" : "translate-x-full",
             )}
           >
-            <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-64 bg-gradient-to-b from-brand/[0.10] to-transparent" />
-
-            <div className="flex items-center justify-between px-6 pt-5">
+            {/* Header (fixed) */}
+            <header className="flex shrink-0 items-center justify-between border-b border-border px-6 py-4">
               <span className="text-sm font-medium text-muted-foreground">
                 Profile
               </span>
@@ -125,32 +132,48 @@ export function ProfilePanel({ user }: { user: SessionUser }) {
                 ref={closeRef}
                 type="button"
                 onClick={close}
-                aria-label="Close"
+                aria-label="Close profile"
                 className="grid size-8 place-items-center rounded-lg text-muted-foreground outline-none transition-colors hover:bg-accent hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
               >
                 <X className="size-4" />
               </button>
+            </header>
+
+            {/* Body (scrolls independently) */}
+            <div className="min-h-0 flex-1 overflow-y-auto">
+              <div className="relative">
+                <div
+                  aria-hidden="true"
+                  className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-brand/[0.12] to-transparent"
+                />
+                <div className="relative space-y-8 px-6 py-6">
+                  <ProfileHeader user={user} stats={stats} imgErrored={imgError} />
+
+                  {error ? (
+                    <p className="text-sm text-muted-foreground">
+                      Couldn&rsquo;t load your stats. Close and reopen to try
+                      again.
+                    </p>
+                  ) : loading || !stats ? (
+                    <PanelSkeleton />
+                  ) : (
+                    <>
+                      <Heatmap days={stats.heatmap} />
+                      <Statistics stats={stats} />
+                      <Goals stats={stats} />
+                    </>
+                  )}
+
+                  <Achievements />
+                  <AccountInfo />
+                </div>
+              </div>
             </div>
 
-            <div className="space-y-8 px-6 pb-10 pt-4">
-              <ProfileHeader user={user} stats={stats} />
-
-              {error ? (
-                <p className="text-sm text-muted-foreground">
-                  Couldn&rsquo;t load your stats. Please try again.
-                </p>
-              ) : loading || !stats ? (
-                <PanelSkeleton />
-              ) : (
-                <>
-                  <Heatmap days={stats.heatmap} />
-                  <Statistics stats={stats} />
-                  <Goals stats={stats} />
-                </>
-              )}
-
-              <Account email={user.email} />
-            </div>
+            {/* Footer (pinned) */}
+            <footer className="shrink-0 border-t border-border p-4">
+              <SignOutButton />
+            </footer>
           </aside>
         </div>
       )}
@@ -161,11 +184,13 @@ export function ProfilePanel({ user }: { user: SessionUser }) {
 function ProfileHeader({
   user,
   stats,
+  imgErrored,
 }: {
   user: SessionUser;
   stats: ProfileStats | null;
+  imgErrored: boolean;
 }) {
-  const [imgError, setImgError] = useState(false);
+  const [imgError, setImgError] = useState(imgErrored);
   const joined = stats?.joinedAt
     ? new Date(stats.joinedAt).toLocaleDateString(undefined, {
         month: "long",
@@ -175,7 +200,7 @@ function ProfileHeader({
 
   return (
     <div className="flex items-center gap-4">
-      <div className="grid size-16 place-items-center overflow-hidden rounded-2xl bg-secondary text-lg font-medium text-foreground ring-1 ring-white/10">
+      <div className="grid size-16 shrink-0 place-items-center overflow-hidden rounded-2xl bg-secondary text-lg font-medium text-foreground ring-1 ring-white/10">
         {user.image && !imgError ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
@@ -196,18 +221,16 @@ function ProfileHeader({
         {user.email && (
           <p className="truncate text-sm text-muted-foreground">{user.email}</p>
         )}
-        {joined && (
-          <p className="mt-0.5 text-xs text-muted-foreground">
-            Joined {joined}
-          </p>
-        )}
+        <p className="mt-0.5 text-xs text-muted-foreground">
+          {joined ? `Joined ${joined}` : "\u00A0"}
+        </p>
       </div>
     </div>
   );
 }
 
 function heatLevel(count: number) {
-  if (count <= 0) return "bg-white/[0.04]";
+  if (count <= 0) return "bg-white/[0.05]";
   if (count === 1) return "bg-brand/30";
   if (count <= 3) return "bg-brand/50";
   if (count <= 5) return "bg-brand/75";
@@ -215,8 +238,9 @@ function heatLevel(count: number) {
 }
 
 function Heatmap({ days }: { days: HeatmapDay[] }) {
-  // Pad the front so the grid's first column aligns to the weekday (Sun=0).
-  const firstDay = days[0] ? new Date(days[0].date + "T00:00:00Z").getUTCDay() : 0;
+  const firstDay = days[0]
+    ? new Date(days[0].date + "T00:00:00Z").getUTCDay()
+    : 0;
   const cells: (HeatmapDay | null)[] = [
     ...Array.from({ length: firstDay }, () => null),
     ...days,
@@ -227,12 +251,14 @@ function Heatmap({ days }: { days: HeatmapDay[] }) {
       <h3 className="mb-3 text-sm font-medium text-foreground">
         Learning activity
       </h3>
-      <div className="grid grid-flow-col grid-rows-7 gap-1 overflow-x-auto">
+      <div className="grid grid-flow-col grid-rows-7 gap-1 overflow-x-auto pb-1">
         {cells.map((d, i) =>
           d ? (
             <div
               key={d.date}
-              title={`${d.date}\n${d.count} problem${d.count === 1 ? "" : "s"} solved${
+              title={`${d.date}\n${d.count} problem${
+                d.count === 1 ? "" : "s"
+              } solved${
                 d.topics.length ? `\nTopics: ${d.topics.join(", ")}` : ""
               }`}
               className={cn("size-3 rounded-[3px]", heatLevel(d.count))}
@@ -244,7 +270,7 @@ function Heatmap({ days }: { days: HeatmapDay[] }) {
       </div>
       <div className="mt-3 flex items-center justify-end gap-1.5 text-[10px] text-muted-foreground">
         <span>Less</span>
-        <span className="size-3 rounded-[3px] bg-white/[0.04]" />
+        <span className="size-3 rounded-[3px] bg-white/[0.05]" />
         <span className="size-3 rounded-[3px] bg-brand/30" />
         <span className="size-3 rounded-[3px] bg-brand/50" />
         <span className="size-3 rounded-[3px] bg-brand/75" />
@@ -331,8 +357,34 @@ function Goals({ stats }: { stats: ProfileStats }) {
   );
 }
 
-function Account({ email }: { email?: string | null }) {
-  const [pending, startTransition] = useTransition();
+function Achievements() {
+  const badges = ["First solve", "7-day streak", "Finish a step", "Finish A2Z"];
+  return (
+    <section>
+      <div className="mb-3 flex items-center justify-between">
+        <h3 className="text-sm font-medium text-foreground">Achievements</h3>
+        <span className="rounded bg-white/[0.06] px-1.5 py-0.5 text-[10px] text-muted-foreground">
+          Soon
+        </span>
+      </div>
+      <div className="grid grid-cols-2 gap-3">
+        {badges.map((b) => (
+          <div
+            key={b}
+            className="surface flex items-center gap-2.5 rounded-xl px-3 py-3 opacity-60"
+          >
+            <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-white/[0.05] text-muted-foreground">
+              <Lock className="size-3.5" />
+            </span>
+            <span className="truncate text-sm text-muted-foreground">{b}</span>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function AccountInfo() {
   return (
     <section>
       <h3 className="mb-3 text-sm font-medium text-foreground">Account</h3>
@@ -356,37 +408,39 @@ function Account({ email }: { email?: string | null }) {
             Soon
           </span>
         </div>
-        <button
-          type="button"
-          disabled={pending}
-          onClick={() => startTransition(() => void signOutAction())}
-          className="flex w-full items-center gap-2 px-4 py-3 text-left text-sm text-foreground outline-none transition-colors hover:bg-accent focus-visible:bg-accent"
-        >
-          <LogOut className="size-4" />
-          {pending ? "Signing out…" : "Sign out"}
-        </button>
       </div>
-      {email && (
-        <p className="mt-2 text-[11px] text-muted-foreground">
-          Signed in as {email}
-        </p>
-      )}
     </section>
+  );
+}
+
+function SignOutButton() {
+  const [pending, startTransition] = useTransition();
+  return (
+    <button
+      type="button"
+      disabled={pending}
+      onClick={() => startTransition(() => void signOutAction())}
+      className={cn(
+        "flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-border text-sm font-medium text-foreground outline-none transition-colors hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring",
+        pending && "opacity-60",
+      )}
+    >
+      <LogOut className="size-4" />
+      {pending ? "Signing out…" : "Sign out"}
+    </button>
   );
 }
 
 function PanelSkeleton() {
   return (
     <div className="space-y-6">
-      <div className="h-24 w-full animate-pulse rounded-xl bg-white/[0.04]" />
+      <div className="h-28 w-full animate-pulse rounded-xl bg-white/[0.04]" />
       <div className="grid grid-cols-2 gap-3">
         {Array.from({ length: 4 }).map((_, i) => (
-          <div
-            key={i}
-            className="h-20 animate-pulse rounded-xl bg-white/[0.04]"
-          />
+          <div key={i} className="h-20 animate-pulse rounded-xl bg-white/[0.04]" />
         ))}
       </div>
+      <div className="h-16 w-full animate-pulse rounded-xl bg-white/[0.04]" />
     </div>
   );
 }
