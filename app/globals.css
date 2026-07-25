@@ -280,3 +280,102 @@ body {
     @apply bg-background text-foreground font-sans;
   }
 }
+
+/* =========================================================
+   Hero (landing) — cinematic glass system. Scoped class names,
+   additive only; does not affect the app/dashboard palette.
+   ========================================================= */
+
+/* Liquid glass: faint luminosity fill + blur + gradient hairline border
+   drawn via a masked ::before (so the border is a true 1px gradient ring). */
+.liquid-glass {
+  position: relative;
+  background: rgba(255, 255, 255, 0.01);
+  background-blend-mode: luminosity;
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  border: none;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1);
+}
+.liquid-glass::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.38),
+    rgba(255, 255, 255, 0.06) 38%,
+    rgba(255, 255, 255, 0) 60%,
+    rgba(139, 125, 255, 0.28)
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* Subtle hover lift/glow for glass buttons. */
+.glass-glow {
+  transition:
+    transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.25s ease;
+}
+.glass-glow:hover {
+  transform: translateY(-1px);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.14),
+    0 8px 30px -10px rgba(139, 125, 255, 0.5);
+}
+
+/* Fade-up entrance (hero only). */
+@keyframes hero-rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+.hero-rise {
+  animation: hero-rise 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Gentle floating for the decorative cards. */
+@keyframes hero-float-a {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+@keyframes hero-float-b {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-14px); }
+}
+@keyframes hero-float-c {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+.hero-float-a { animation: hero-float-a 6s ease-in-out infinite; }
+.hero-float-b { animation: hero-float-b 7.6s ease-in-out infinite; }
+.hero-float-c { animation: hero-float-c 6.8s ease-in-out infinite; }
+
+/* Scroll indicator nudge. */
+@keyframes hero-nudge {
+  0%, 100% { transform: translateY(0); opacity: 0.7; }
+  50% { transform: translateY(3px); opacity: 1; }
+}
+.hero-nudge { animation: hero-nudge 2s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-rise,
+  .hero-float-a,
+  .hero-float-b,
+  .hero-float-c,
+  .hero-nudge {
+    animation: none;
+  }
+}
