@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowRight, Play } from "lucide-react";
 import { HeroPreview } from "@/components/marketing/hero-preview";
+import { SignInDialog } from "@/components/marketing/sign-in-dialog";
 
 const loop = ["Lecture", "Problem", "Notes", "Progress", "Revision", "Next"];
 
@@ -48,13 +49,10 @@ export function Hero() {
           </div>
 
           <div className="animate-rise mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <Link
-              href="/login"
-              className="group inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-foreground px-5 text-sm font-medium text-background transition-transform hover:scale-[1.02] active:scale-[0.99] sm:w-auto"
-            >
+            <SignInDialog className="group inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-foreground px-5 text-sm font-medium text-background outline-none transition-transform hover:scale-[1.02] focus-visible:ring-2 focus-visible:ring-ring active:scale-[0.99] sm:w-auto">
               Start Striver A2Z
               <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
-            </Link>
+            </SignInDialog>
             <Link
               href="#how-it-works"
               className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/[0.02] px-5 text-sm font-medium text-foreground transition-colors hover:bg-white/[0.05] sm:w-auto"

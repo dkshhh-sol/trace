@@ -1,5 +1,5 @@
-import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { SignInDialog } from "@/components/marketing/sign-in-dialog";
 
 export function CTA() {
   return (
@@ -23,13 +23,10 @@ export function CTA() {
           </p>
 
           <div className="mt-9 flex justify-center">
-            <Link
-              href="/login"
-              className="group inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-foreground px-6 text-sm font-medium text-background transition-transform hover:scale-[1.02] active:scale-[0.99] sm:w-auto"
-            >
+            <SignInDialog className="group inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-foreground px-6 text-sm font-medium text-background outline-none transition-transform hover:scale-[1.02] focus-visible:ring-2 focus-visible:ring-ring active:scale-[0.99] sm:w-auto">
               Continue with Google
               <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
-            </Link>
+            </SignInDialog>
           </div>
           <p className="mt-4 text-xs text-muted-foreground">
             Free · No credit card required

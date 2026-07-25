@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Logo } from "@/components/ui/logo";
+import { SignInDialog } from "@/components/marketing/sign-in-dialog";
 
 const navLinks = [
   { label: "Why Trace", href: "#why" },
@@ -28,18 +29,12 @@ export function SiteHeader() {
           </nav>
 
           <div className="flex items-center gap-1.5">
-            <Link
-              href="/login"
-              className="hidden rounded-lg px-3 py-2 text-sm text-muted-foreground transition-colors hover:text-foreground sm:inline-flex"
-            >
+            <SignInDialog className="hidden rounded-lg px-3 py-2 text-sm text-muted-foreground outline-none transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring sm:inline-flex">
               Sign in
-            </Link>
-            <Link
-              href="/login"
-              className="inline-flex h-9 items-center rounded-lg bg-foreground px-3.5 text-sm font-medium text-background transition-transform hover:scale-[1.02] active:scale-[0.99]"
-            >
+            </SignInDialog>
+            <SignInDialog className="inline-flex h-9 items-center rounded-lg bg-foreground px-3.5 text-sm font-medium text-background outline-none transition-transform hover:scale-[1.02] focus-visible:ring-2 focus-visible:ring-ring active:scale-[0.99]">
               Get started
-            </Link>
+            </SignInDialog>
           </div>
         </div>
       </div>
