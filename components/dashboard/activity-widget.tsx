@@ -1,18 +1,28 @@
 import { Flame, Trophy, CalendarDays, CalendarRange, CalendarCheck } from "lucide-react";
 import { getSession } from "@/lib/auth/guards";
 import { getUserSolves } from "@/lib/db/queries/activity";
-import { computeActivity } from "@/lib/progress/compute";
+import { getAccountCreatedAt } from "@/lib/db/queries/user";
+import { aggregateSolvesByDay, computeActivity } from "@/lib/progress/compute";
 import { striverA2Z } from "@/lib/content/striver";
-import { ContributionCalendar, HeatmapLegend } from "./contribution-calendar";
+import { HeatmapLegend } from "./contribution-calendar";
+import { YearContributionCalendar } from "./year-contribution-calendar";
 import { CountUp } from "./count-up";
 
-/** Dashboard "Learning Activity" summary — full-width calendar + key metrics. */
+/** Dashboard "Learning Activity" summary — fixed-year calendar + key metrics. */
 export async function ActivityWidget() {
   const session = await getSession();
   if (!session?.user) return null;
 
-  const solves = await getUserSolves(session.user.id, striverA2Z.slug);
-  const a = computeActivity(solves, 371); // ~53 weeks, aligned to full columns
+  const [solves, createdAt] = await Promise.all([
+    getUserSolves(session.user.id, striverA2Z.slug),
+    getAccountCreatedAt(session.user.id),
+  ]);
+
+  // Metrics are all-time / current-period and independent of the selected year.
+  const a = computeActivity(solves, 0);
+  const aggregate = aggregateSolvesByDay(solves);
+  const currentYear = new Date().getUTCFullYear();
+  const minYear = Math.min(createdAt.getUTCFullYear(), currentYear);
 
   const metrics = [
     { icon: Flame, label: "Current streak", value: a.currentStreak, suffix: "d", accent: "text-success" },
@@ -29,9 +39,11 @@ export async function ActivityWidget() {
         Learning activity
       </h2>
 
-      <ContributionCalendar
-        days={a.heatmap}
-        variant="fill"
+      <YearContributionCalendar
+        aggregate={aggregate}
+        accountCreatedAt={createdAt.toISOString()}
+        minYear={minYear}
+        maxYear={currentYear}
         currentStreak={a.currentStreak}
       />
 

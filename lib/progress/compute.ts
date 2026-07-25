@@ -12,6 +12,13 @@ export type Solve = { problemId: string; completedAt: Date | null };
 
 export type Difficulty = "easy" | "medium" | "hard";
 
+/** Compact per-day aggregate keyed by `YYYY-MM-DD` (UTC). */
+export type DayAggregate = {
+  count: number;
+  topics: string[];
+  byDifficulty: { easy: number; medium: number; hard: number };
+};
+
 // Content maps built once per process.
 const problemToTopic = new Map<string, string>();
 const problemToDifficulty = new Map<string, Difficulty>();
@@ -55,6 +62,43 @@ export function problemDifficulty(problemId: string): Difficulty | null {
 }
 
 export const dayKey = (d: Date) => d.toISOString().slice(0, 10);
+
+/**
+ * Aggregate solves into a compact per-day map (UTC). This is intentionally
+ * date-window agnostic: it's the shared input for the dashboard's fixed-year
+ * calendar generator, which can rebuild any calendar year from this map
+ * client-side without another database round-trip.
+ */
+export function aggregateSolvesByDay(solves: Solve[]): Record<string, DayAggregate> {
+  const map = new Map<
+    string,
+    { count: number; topics: Set<string>; easy: number; medium: number; hard: number }
+  >();
+
+  for (const s of solves) {
+    if (!s.completedAt) continue;
+    const key = dayKey(s.completedAt);
+    const bucket =
+      map.get(key) ??
+      { count: 0, topics: new Set<string>(), easy: 0, medium: 0, hard: 0 };
+    bucket.count++;
+    const topic = problemToTopic.get(s.problemId);
+    if (topic) bucket.topics.add(topic);
+    const diff = problemToDifficulty.get(s.problemId);
+    if (diff) bucket[diff]++;
+    map.set(key, bucket);
+  }
+
+  const out: Record<string, DayAggregate> = {};
+  for (const [key, b] of map) {
+    out[key] = {
+      count: b.count,
+      topics: [...b.topics],
+      byDifficulty: { easy: b.easy, medium: b.medium, hard: b.hard },
+    };
+  }
+  return out;
+}
 
 /** Start of the current period window (UTC), for a given `now`. */
 export function periodStart(period: GoalPeriod, now: Date): Date {
