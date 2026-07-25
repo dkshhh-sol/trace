@@ -221,7 +221,7 @@ export function LectureWorkspace({
   );
 
   const editorPanel = (
-    <div className="flex min-h-0 flex-col">
+    <div className="flex h-full min-h-0 flex-col">
       <EditorToolbar
         language={language}
         onLanguageChange={onLanguageChange}
@@ -283,7 +283,7 @@ export function LectureWorkspace({
       {isWide ? (
         <div
           ref={containerRef}
-          className="flex h-[72vh] overflow-hidden rounded-2xl border border-border"
+          className="flex h-[82vh] overflow-hidden rounded-2xl border border-border"
         >
           <div
             className="relative bg-black"
@@ -314,7 +314,7 @@ export function LectureWorkspace({
             {player}
           </div>
           {editorOpen && (
-            <div className="h-[60vh] overflow-hidden rounded-2xl border border-border bg-card">
+            <div className="h-[70vh] overflow-hidden rounded-2xl border border-border bg-card">
               {editorPanel}
             </div>
           )}
