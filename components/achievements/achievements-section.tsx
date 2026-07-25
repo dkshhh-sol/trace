@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { X } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { X, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { AchievementIcon } from "./achievement-icon";
 import { notifyUnlocks, type UnlockNotice } from "./notify";
@@ -35,6 +35,51 @@ const CATEGORIES = [
   { key: "journey", label: "Trace Journey", emoji: "🚀" },
 ];
 
+// Marquee achievements used to fill the preview when the user has little
+// activity yet, so the section never looks empty.
+const MILESTONES = [
+  "solve_1",
+  "streak_7",
+  "topic_arrays",
+  "solve_100",
+  "goal_first",
+  "journey_complete_a2z",
+];
+
+const PREVIEW_COUNT = 6;
+
+/**
+ * Personalized preview: recently unlocked first, then in-progress (highest
+ * completion first), then important milestones, then anything else — capped at
+ * six and de-duplicated.
+ */
+function buildPreview(list: AchievementView[]): AchievementView[] {
+  const byId = new Map(list.map((a) => [a.id, a] as const));
+  const chosen: AchievementView[] = [];
+  const seen = new Set<string>();
+  const push = (a?: AchievementView) => {
+    if (a && !seen.has(a.id) && chosen.length < PREVIEW_COUNT) {
+      seen.add(a.id);
+      chosen.push(a);
+    }
+  };
+
+  list
+    .filter((a) => a.unlocked && a.unlockedAt)
+    .sort((a, b) => (b.unlockedAt! < a.unlockedAt! ? -1 : 1))
+    .forEach(push);
+
+  list
+    .filter((a) => !a.unlocked && a.progress > 0)
+    .sort((a, b) => b.progress / b.target - a.progress / a.target)
+    .forEach(push);
+
+  for (const id of MILESTONES) push(byId.get(id));
+  for (const a of list) push(a);
+
+  return chosen;
+}
+
 function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString("en-US", {
     month: "long",
@@ -48,6 +93,7 @@ export function AchievementsSection() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [selected, setSelected] = useState<AchievementView | null>(null);
+  const [expanded, setExpanded] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -67,15 +113,20 @@ export function AchievementsSection() {
 
   const total = data?.achievements.length ?? 0;
   const unlockedCount = data?.achievements.filter((a) => a.unlocked).length ?? 0;
+  const preview = useMemo(
+    () => (data ? buildPreview(data.achievements) : []),
+    [data],
+  );
 
   return (
     <section>
-      <div className="mb-3 flex items-center justify-between">
+      <div className="mb-3">
         <h3 className="text-sm font-medium text-foreground">Achievements</h3>
         {data && (
-          <span className="text-xs tabular-nums text-muted-foreground">
-            {unlockedCount} / {total} unlocked
-          </span>
+          <p className="text-xs text-muted-foreground">
+            <span className="tabular-nums">{unlockedCount}</span> of{" "}
+            <span className="tabular-nums">{total}</span> unlocked
+          </p>
         )}
       </div>
 
@@ -91,59 +142,82 @@ export function AchievementsSection() {
         </p>
       ) : (
         <>
-          {/* Recently unlocked / empty state */}
-          {data.recentlyUnlocked.length > 0 ? (
-            <div className="mb-5">
-              <p className="mb-2 text-[11px] uppercase tracking-wide text-muted-foreground">
-                Recently unlocked
-              </p>
-              <div className="grid grid-cols-3 gap-2">
-                {data.recentlyUnlocked.map((a) => (
-                  <button
-                    key={a.id}
-                    type="button"
-                    onClick={() => setSelected(a)}
-                    className="flex flex-col items-center gap-1.5 rounded-xl bg-brand/[0.08] p-2.5 text-center ring-1 ring-brand/25 outline-none transition-transform hover:scale-[1.02] focus-visible:ring-2 focus-visible:ring-ring"
-                  >
-                    <AchievementIcon icon={a.icon} className="size-4 text-brand" />
-                    <span className="line-clamp-2 text-[10px] leading-tight text-foreground">
-                      {a.title}
-                    </span>
-                  </button>
-                ))}
-              </div>
-            </div>
-          ) : (
-            <p className="mb-5 rounded-xl bg-white/[0.03] px-4 py-4 text-center text-sm text-muted-foreground ring-1 ring-white/[0.05]">
+          {unlockedCount === 0 && (
+            <p className="mb-3 text-xs text-muted-foreground">
               Your journey has just begun.
             </p>
           )}
 
-          {/* Grid grouped by category */}
-          <div className="space-y-4">
-            {CATEGORIES.map((cat) => {
-              const items = data.achievements.filter(
-                (a) => a.category === cat.key,
-              );
-              if (items.length === 0) return null;
-              return (
-                <div key={cat.key}>
-                  <p className="mb-2 text-[11px] font-medium text-muted-foreground">
-                    <span className="mr-1">{cat.emoji}</span>
-                    {cat.label}
-                  </p>
-                  <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-                    {items.map((a) => (
-                      <AchievementCard
-                        key={a.id}
-                        a={a}
-                        onClick={() => setSelected(a)}
-                      />
-                    ))}
-                  </div>
-                </div>
-              );
-            })}
+          {/* Preview (collapsed only) */}
+          {!expanded && (
+            <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+              {preview.map((a) => (
+                <AchievementCard
+                  key={a.id}
+                  a={a}
+                  onClick={() => setSelected(a)}
+                />
+              ))}
+            </div>
+          )}
+
+          {/* Full list (expanded) — smooth height + fade via grid-rows */}
+          <div
+            className={cn(
+              "grid transition-[grid-template-rows] duration-300 ease-out",
+              expanded ? "grid-rows-[1fr]" : "grid-rows-[0fr]",
+            )}
+          >
+            <div
+              className={cn(
+                "min-h-0 overflow-hidden transition-opacity duration-300",
+                expanded ? "opacity-100" : "opacity-0",
+              )}
+            >
+              <div className="space-y-4">
+                {CATEGORIES.map((cat) => {
+                  const items = data.achievements.filter(
+                    (a) => a.category === cat.key,
+                  );
+                  if (items.length === 0) return null;
+                  return (
+                    <div key={cat.key}>
+                      <p className="mb-2 text-[11px] font-medium text-muted-foreground">
+                        <span className="mr-1">{cat.emoji}</span>
+                        {cat.label}
+                      </p>
+                      <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+                        {items.map((a) => (
+                          <AchievementCard
+                            key={a.id}
+                            a={a}
+                            onClick={() => setSelected(a)}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+
+          {/* Toggle */}
+          <div className="mt-4 flex justify-center">
+            <button
+              type="button"
+              onClick={() => setExpanded((v) => !v)}
+              aria-expanded={expanded}
+              className="inline-flex items-center gap-1.5 rounded-full border border-border bg-white/[0.02] px-3.5 py-1.5 text-xs font-medium text-muted-foreground outline-none transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
+            >
+              {expanded ? "Show Less" : "Show All Achievements"}
+              <ChevronDown
+                className={cn(
+                  "size-3.5 transition-transform duration-300",
+                  expanded && "rotate-180",
+                )}
+              />
+            </button>
           </div>
         </>
       )}
