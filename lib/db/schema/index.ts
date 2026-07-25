@@ -4,3 +4,4 @@ export * from "./goals";
 export * from "./future";
 export * from "./code";
 export * from "./github";
+export * from "./achievements";

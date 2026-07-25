@@ -1,4 +1,4 @@
-import { pgTable, uuid, text, timestamp } from "drizzle-orm/pg-core";
+import { pgTable, uuid, text, integer, timestamp } from "drizzle-orm/pg-core";
 import { users } from "./auth";
 
 /**
@@ -23,6 +23,8 @@ export const githubConnections = pgTable("github_connections", {
   scope: text("scope"),
   defaultRepo: text("default_repo"),
   defaultBranch: text("default_branch"),
+  // Cumulative successful commits pushed from Trace (drives commit achievements).
+  commitCount: integer("commit_count").notNull().default(0),
   createdAt: timestamp("created_at", { withTimezone: true, mode: "date" })
     .notNull()
     .defaultNow(),

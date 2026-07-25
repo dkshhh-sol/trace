@@ -23,6 +23,7 @@ export type DayAggregate = {
 const problemToTopic = new Map<string, string>();
 const problemToDifficulty = new Map<string, Difficulty>();
 const topicProblemIds: { topic: string; ids: string[] }[] = [];
+const stepProblemIds: { step: string; ids: string[] }[] = [];
 
 /**
  * Derive a problem's difficulty from its topic name. The Striver content has
@@ -42,15 +43,18 @@ function difficultyFromTopic(topicName: string): Difficulty | null {
 }
 
 for (const step of striverA2Z.steps) {
+  const stepIds: string[] = [];
   for (const topic of step.topics) {
     const ids = topic.problems.map((p) => p.id);
     topicProblemIds.push({ topic: topic.name, ids });
+    stepIds.push(...ids);
     const diff = difficultyFromTopic(topic.name);
     for (const p of topic.problems) {
       problemToTopic.set(p.id, topic.name);
       if (diff) problemToDifficulty.set(p.id, diff);
     }
   }
+  stepProblemIds.push({ step: step.name, ids: stepIds });
 }
 
 export const TOTAL_PROBLEMS = striverA2Z.totalProblems;
@@ -317,4 +321,171 @@ export function computeGoalProgress(
     const remaining = Math.max(0, g.targetCount - done);
     return { ...g, done, pct, remaining, complete: g.targetCount > 0 && done >= g.targetCount };
   });
+}
+
+/* ----------------------------- Achievements -------------------------------- */
+
+/**
+ * Named Striver steps used by the "topic mastery" achievements. Matched by
+ * exact step-name substring so "Binary Search" never collides with
+ * "Binary Search Trees".
+ */
+const NAMED_STEPS = {
+  arrays: "Step 3: Arrays",
+  binarySearch: "Step 4: Binary Search",
+  trees: "Step 13: Binary Trees",
+  graphs: "Step 15: Graphs",
+  dp: "Step 16: Dynamic Programming",
+} as const;
+
+export type Mastery = {
+  topicsCompleted: number;
+  totalTopics: number;
+  everyTopicComplete: boolean;
+  everyProblemComplete: boolean;
+  steps: {
+    arrays: boolean;
+    binarySearch: boolean;
+    trees: boolean;
+    graphs: boolean;
+    dp: boolean;
+  };
+};
+
+function stepComplete(name: string, completed: Set<string>): boolean {
+  const entry = stepProblemIds.find((s) => s.step.includes(name));
+  return Boolean(entry && entry.ids.length > 0 && entry.ids.every((id) => completed.has(id)));
+}
+
+/** Topic/step completion derived from the set of solved problem ids. */
+export function computeMastery(completed: Set<string>): Mastery {
+  const topicsCompleted = topicProblemIds.filter(
+    (t) => t.ids.length > 0 && t.ids.every((id) => completed.has(id)),
+  ).length;
+
+  return {
+    topicsCompleted,
+    totalTopics: TOTAL_TOPICS,
+    everyTopicComplete: topicsCompleted === TOTAL_TOPICS,
+    everyProblemComplete: completed.size >= TOTAL_PROBLEMS,
+    steps: {
+      arrays: stepComplete(NAMED_STEPS.arrays, completed),
+      binarySearch: stepComplete(NAMED_STEPS.binarySearch, completed),
+      trees: stepComplete(NAMED_STEPS.trees, completed),
+      graphs: stepComplete(NAMED_STEPS.graphs, completed),
+      dp: stepComplete(NAMED_STEPS.dp, completed),
+    },
+  };
+}
+
+export type GoalWithMeta = {
+  targetCount: number;
+  period: GoalPeriod;
+  createdAt: Date;
+};
+
+export type GoalAchievementStats = {
+  totalCompleted: number;
+  maxDailyConsecutive: number;
+  maxWeeklyConsecutive: number;
+  monthlyCompleted: number;
+};
+
+function addUTC(d: Date, days: number): Date {
+  const n = new Date(d);
+  n.setUTCDate(n.getUTCDate() + days);
+  return n;
+}
+
+/**
+ * Replay every goal's period windows from its creation to now, deriving goal
+ * completions purely from solves (no separate history table needed). A period
+ * counts as completed when solves inside it meet the goal's target.
+ */
+export function computeGoalAchievementStats(
+  goals: GoalWithMeta[],
+  solves: Solve[],
+  now: Date = new Date(),
+): GoalAchievementStats {
+  const perDay = new Map<string, number>();
+  for (const s of solves) {
+    if (!s.completedAt) continue;
+    const k = dayKey(s.completedAt);
+    perDay.set(k, (perDay.get(k) ?? 0) + 1);
+  }
+  const rangeSum = (startInclusive: Date, endExclusive: Date): number => {
+    let sum = 0;
+    for (let d = new Date(startInclusive); d < endExclusive; d = addUTC(d, 1)) {
+      sum += perDay.get(dayKey(d)) ?? 0;
+    }
+    return sum;
+  };
+
+  const stats: GoalAchievementStats = {
+    totalCompleted: 0,
+    maxDailyConsecutive: 0,
+    maxWeeklyConsecutive: 0,
+    monthlyCompleted: 0,
+  };
+
+  for (const goal of goals) {
+    if (goal.targetCount <= 0) continue;
+    const results: boolean[] = [];
+
+    if (goal.period === "daily") {
+      let cur = periodStart("daily", goal.createdAt);
+      const end = periodStart("daily", now);
+      while (cur <= end) {
+        const next = addUTC(cur, 1);
+        results.push(rangeSum(cur, next) >= goal.targetCount);
+        cur = next;
+      }
+    } else if (goal.period === "weekly") {
+      let cur = periodStart("weekly", goal.createdAt);
+      const end = periodStart("weekly", now);
+      while (cur <= end) {
+        const next = addUTC(cur, 7);
+        results.push(rangeSum(cur, next) >= goal.targetCount);
+        cur = next;
+      }
+    } else if (goal.period === "monthly") {
+      let cur = periodStart("monthly", goal.createdAt);
+      const end = periodStart("monthly", now);
+      while (cur <= end) {
+        const next = new Date(
+          Date.UTC(cur.getUTCFullYear(), cur.getUTCMonth() + 1, 1),
+        );
+        results.push(rangeSum(cur, next) >= goal.targetCount);
+        cur = next;
+      }
+    } else {
+      // yearly (not targeted by achievements, but counted toward totals)
+      let cur = periodStart("yearly", goal.createdAt);
+      const end = periodStart("yearly", now);
+      while (cur <= end) {
+        const next = new Date(Date.UTC(cur.getUTCFullYear() + 1, 0, 1));
+        results.push(rangeSum(cur, next) >= goal.targetCount);
+        cur = next;
+      }
+    }
+
+    const completed = results.filter(Boolean).length;
+    stats.totalCompleted += completed;
+
+    let run = 0;
+    let maxRun = 0;
+    for (const ok of results) {
+      run = ok ? run + 1 : 0;
+      if (run > maxRun) maxRun = run;
+    }
+
+    if (goal.period === "daily")
+      stats.maxDailyConsecutive = Math.max(stats.maxDailyConsecutive, maxRun);
+    else if (goal.period === "weekly")
+      stats.maxWeeklyConsecutive = Math.max(stats.maxWeeklyConsecutive, maxRun);
+    else if (goal.period === "monthly")
+      stats.monthlyCompleted += completed;
+  }
+
+  return stats;
 }

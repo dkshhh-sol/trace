@@ -4,6 +4,7 @@ import { ProfilePanel } from "./profile-panel";
 import { Logo } from "@/components/ui/logo";
 import { Toaster } from "@/components/ui/toast";
 import { GitHubReturnToast } from "@/components/workspace/github-return-toast";
+import { AchievementWatcher } from "@/components/achievements/achievement-watcher";
 
 type SessionUser = {
   name?: string | null;
@@ -48,6 +49,7 @@ export function AppShell({
       <BottomNav />
       <Toaster />
       <GitHubReturnToast />
+      <AchievementWatcher />
     </div>
   );
 }

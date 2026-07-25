@@ -1,6 +1,6 @@
 import "server-only";
 
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import { db } from "@/lib/db/client";
 import { githubConnections } from "@/lib/db/schema";
 import { encryptSecret, decryptSecret } from "@/lib/crypto";
@@ -89,7 +89,10 @@ export async function upsertConnection(input: {
     });
 }
 
-/** Remember the last commit target per user (Requirement 9). */
+/**
+ * Remember the last commit target per user (Requirement 9) and increment the
+ * cumulative commit counter (drives the commit achievements).
+ */
 export async function setCommitDefaults(
   userId: string,
   defaultRepo: string,
@@ -97,7 +100,12 @@ export async function setCommitDefaults(
 ) {
   await db
     .update(githubConnections)
-    .set({ defaultRepo, defaultBranch, updatedAt: new Date() })
+    .set({
+      defaultRepo,
+      defaultBranch,
+      commitCount: sql`${githubConnections.commitCount} + 1`,
+      updatedAt: new Date(),
+    })
     .where(eq(githubConnections.userId, userId));
 }
 

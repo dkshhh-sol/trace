@@ -10,7 +10,6 @@ import {
   CheckCircle2,
   Layers,
   TrendingUp,
-  Lock,
   Check,
   Loader2,
 } from "lucide-react";
@@ -18,6 +17,7 @@ import { cn } from "@/lib/utils";
 import { signOutAction } from "@/lib/auth/actions";
 import { toast } from "@/components/ui/toast";
 import { GitHubMark } from "@/components/ui/github-mark";
+import { AchievementsSection } from "@/components/achievements/achievements-section";
 import { ContributionCalendar, HeatmapLegend } from "./contribution-calendar";
 import { EditGoalsButton } from "./edit-goals-modal";
 import { CountUp } from "./count-up";
@@ -177,7 +177,7 @@ export function ProfilePanel({ user }: { user: SessionUser }) {
                     </>
                   )}
 
-                  <Achievements />
+                  <AchievementsSection />
                   <AccountInfo />
                 </div>
               </div>
@@ -372,33 +372,6 @@ function Goals({
           ))}
         </div>
       )}
-    </section>
-  );
-}
-
-function Achievements() {
-  const badges = ["First solve", "7-day streak", "Finish a step", "Finish A2Z"];
-  return (
-    <section>
-      <div className="mb-3 flex items-center justify-between">
-        <h3 className="text-sm font-medium text-foreground">Achievements</h3>
-        <span className="rounded bg-white/[0.06] px-1.5 py-0.5 text-[10px] text-muted-foreground">
-          Soon
-        </span>
-      </div>
-      <div className="grid grid-cols-2 gap-3">
-        {badges.map((b) => (
-          <div
-            key={b}
-            className="surface flex items-center gap-2.5 rounded-xl px-3 py-3 opacity-60"
-          >
-            <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-white/[0.05] text-muted-foreground">
-              <Lock className="size-3.5" />
-            </span>
-            <span className="truncate text-sm text-muted-foreground">{b}</span>
-          </div>
-        ))}
-      </div>
     </section>
   );
 }
