@@ -1,0 +1,21 @@
+{
+  "name": "Trace",
+  "short_name": "Trace",
+  "description": "The focused workspace for Striver's A2Z DSA Sheet — lectures, coding, notes and progress in one place.",
+  "icons": [
+    {
+      "src": "/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "theme_color": "#08080b",
+  "background_color": "#08080b",
+  "display": "standalone",
+  "start_url": "/"
+}
