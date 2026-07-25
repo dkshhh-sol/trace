@@ -22,9 +22,9 @@ import { env } from "@/lib/env";
  *   credentials from validated env (Requirement 1.8).
  * - Sessions are persisted in Neon via the Drizzle adapter so logout can
  *   invalidate them server-side (Requirement 3).
- * - Session expiry combines a 30-minute rolling inactivity window (`maxAge`)
- *   with a 7-day absolute lifetime cap enforced in the `session` callback
- *   (Requirements 1.4, 3.1).
+ * - There is no inactivity timeout: the session window matches the 7-day
+ *   absolute lifetime cap enforced in the `session` callback, so users stay
+ *   signed in until that hard limit regardless of activity (Requirement 3.1).
  *
  * This module must never be imported into a Client Component: it pulls in the
  * DB client and secrets (Requirements 11.3, 11.6).
@@ -50,10 +50,12 @@ export const authConfig = {
   trustHost: true,
   session: {
     strategy: "database",
-    // 30-minute inactivity timeout; the adapter refreshes `expires` on access,
-    // at most once per `updateAge` window (Requirement 1.4).
-    maxAge: 30 * 60,
-    updateAge: 5 * 60,
+    // No inactivity timeout: the rolling window equals the 7-day absolute cap,
+    // so a session only ends at that hard limit (enforced in the `session`
+    // callback) — never from being idle. `updateAge` just limits how often the
+    // adapter rewrites `expires` on access.
+    maxAge: 7 * 24 * 60 * 60,
+    updateAge: 24 * 60 * 60,
   },
   pages: { signIn: "/login" },
   callbacks: {
