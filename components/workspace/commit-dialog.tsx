@@ -120,7 +120,7 @@ export function CommitDialog({
       });
       const data = await res.json();
       if (res.ok && data.ok) {
-        toast("Committed to GitHub ✓", "success");
+        toast("Committed to GitHub", "success");
         onClose();
       } else if (res.status === 409) {
         toast("GitHub disconnected. Reconnect and retry.", "error");

@@ -46,7 +46,7 @@ export async function ContinueLearning() {
                 : `${cleanStep(resume.stepName)} · ${resume.topicName}`}
             </p>
             <h2 className="mt-1.5 truncate font-serif text-3xl italic leading-tight text-foreground sm:text-4xl">
-              {done ? "You finished Striver A2Z 🎉" : resume.problem!.name}
+              {done ? "You finished Striver A2Z" : resume.problem!.name}
             </h2>
           </div>
 

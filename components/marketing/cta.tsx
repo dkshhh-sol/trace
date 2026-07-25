@@ -15,7 +15,7 @@ export function CTA() {
             <span className="font-serif italic text-gradient">
               Striver A2Z
             </span>{" "}
-            — without the chaos
+            without the chaos
           </h2>
           <p className="mx-auto mt-5 max-w-lg text-muted-foreground">
             Lectures, problems, notes and progress in one focused workspace.

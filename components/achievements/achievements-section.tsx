@@ -1,7 +1,17 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { X, ChevronDown } from "lucide-react";
+import {
+  X,
+  ChevronDown,
+  Flame,
+  Code2,
+  BookOpen,
+  Target,
+  FolderCode,
+  Compass,
+  type LucideIcon,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import { AchievementIcon } from "./achievement-icon";
 import { notifyUnlocks, type UnlockNotice } from "./notify";
@@ -26,13 +36,13 @@ type Result = {
   newlyUnlocked: UnlockNotice[];
 };
 
-const CATEGORIES = [
-  { key: "streak", label: "Streak", emoji: "🔥" },
-  { key: "problems", label: "Problem Solving", emoji: "💻" },
-  { key: "topics", label: "Topic Mastery", emoji: "📚" },
-  { key: "goals", label: "Goals", emoji: "🎯" },
-  { key: "workspace", label: "Workspace", emoji: "⚡" },
-  { key: "journey", label: "Trace Journey", emoji: "🚀" },
+const CATEGORIES: { key: string; label: string; Icon: LucideIcon }[] = [
+  { key: "streak", label: "Streak", Icon: Flame },
+  { key: "problems", label: "Problem Solving", Icon: Code2 },
+  { key: "topics", label: "Topic Mastery", Icon: BookOpen },
+  { key: "goals", label: "Goals", Icon: Target },
+  { key: "workspace", label: "Workspace", Icon: FolderCode },
+  { key: "journey", label: "Trace Journey", Icon: Compass },
 ];
 
 // Marquee achievements used to fill the preview when the user has little
@@ -144,7 +154,7 @@ export function AchievementsSection() {
         <>
           {unlockedCount === 0 && (
             <p className="mb-3 text-xs text-muted-foreground">
-              Your journey has just begun.
+              No achievements unlocked yet.
             </p>
           )}
 
@@ -182,8 +192,16 @@ export function AchievementsSection() {
                   if (items.length === 0) return null;
                   return (
                     <div key={cat.key}>
-                      <p className="mb-2 text-[11px] font-medium text-muted-foreground">
-                        <span className="mr-1">{cat.emoji}</span>
+                      <p className="mb-2 flex items-center gap-1.5 text-[11px] font-medium text-muted-foreground">
+                        <span
+                          className="grid size-5 place-items-center rounded-full"
+                          style={{
+                            background: "rgba(139,125,255,0.10)",
+                            border: "1px solid rgba(139,125,255,0.20)",
+                          }}
+                        >
+                          <cat.Icon className="size-3 text-brand" strokeWidth={1.75} />
+                        </span>
                         {cat.label}
                       </p>
                       <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
@@ -252,11 +270,17 @@ function AchievementCard({
     >
       <span
         className={cn(
-          "grid size-8 place-items-center rounded-lg",
-          a.unlocked
-            ? "bg-brand/15 text-brand"
-            : "bg-white/[0.04] text-muted-foreground/60",
+          "grid size-8 place-items-center rounded-full",
+          a.unlocked ? "text-brand" : "bg-white/[0.04] text-muted-foreground/60",
         )}
+        style={
+          a.unlocked
+            ? {
+                background: "rgba(139,125,255,0.10)",
+                border: "1px solid rgba(139,125,255,0.20)",
+              }
+            : undefined
+        }
       >
         <AchievementIcon icon={a.icon} className="size-4" />
       </span>
@@ -334,11 +358,19 @@ function AchievementModal({
 
         <span
           className={cn(
-            "mx-auto grid size-16 place-items-center rounded-2xl",
+            "mx-auto grid size-16 place-items-center rounded-full",
             a.unlocked
-              ? "bg-brand/15 text-brand shadow-[0_0_30px_-8px_rgba(139,124,255,0.8)]"
+              ? "text-brand shadow-[0_0_30px_-8px_rgba(139,124,255,0.8)]"
               : "bg-white/[0.04] text-muted-foreground/60",
           )}
+          style={
+            a.unlocked
+              ? {
+                  background: "rgba(139,125,255,0.10)",
+                  border: "1px solid rgba(139,125,255,0.20)",
+                }
+              : undefined
+          }
         >
           <AchievementIcon icon={a.icon} className="size-7" />
         </span>

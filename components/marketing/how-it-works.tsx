@@ -12,7 +12,7 @@ const steps = [
   {
     step: "03",
     title: "Track & continue",
-    body: "Mark it done — your progress saves to your account and Trace surfaces the next problem automatically.",
+    body: "Mark it done, and your progress saves to your account while Trace surfaces the next problem automatically.",
   },
 ];
 
@@ -29,7 +29,7 @@ export function HowItWorks() {
             </span>
           </h2>
           <p className="mt-4 text-muted-foreground">
-            Three steps, one workspace — no tab-switching between lectures,
+            Three steps, one workspace. No tab-switching between lectures,
             problems and a spreadsheet.
           </p>
         </div>

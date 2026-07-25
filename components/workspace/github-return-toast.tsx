@@ -14,7 +14,7 @@ export function GitHubReturnToast() {
     const status = params.get("github");
     if (!status) return;
 
-    if (status === "connected") toast("GitHub connected ✓", "success");
+    if (status === "connected") toast("GitHub connected", "success");
     else if (status === "error") toast("GitHub connection failed.", "error");
     else if (status === "unconfigured")
       toast("GitHub isn't configured on this deployment.", "error");

@@ -4,7 +4,7 @@ const pillars = [
   {
     icon: MonitorPlay,
     title: "Watch inside Trace",
-    body: "Every problem is mapped to its lecture. Watch it embedded, right next to the problem — no new tabs, no hunting through playlists.",
+    body: "Every problem is mapped to its lecture. Watch it embedded, right next to the problem. No new tabs, no hunting through playlists.",
   },
   {
     icon: ListChecks,

@@ -49,7 +49,7 @@ export async function ActivityWidget() {
 
       {a.solved === 0 ? (
         <p className="mt-4 text-sm text-muted-foreground">
-          Start solving problems to build your learning history.
+          No activity recorded yet.
         </p>
       ) : (
         <>

@@ -1,7 +1,7 @@
 import {
   LayoutDashboard,
-  ListChecks,
-  Code2,
+  BookOpen,
+  FolderCode,
   type LucideIcon,
 } from "lucide-react";
 
@@ -17,8 +17,8 @@ export type NavItem = {
  */
 export const navItems: NavItem[] = [
   { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-  { label: "Striver A2Z", href: "/roadmaps/striver-a2z", icon: ListChecks },
-  { label: "Code Files", href: "/code-files", icon: Code2 },
+  { label: "Striver A2Z", href: "/roadmaps/striver-a2z", icon: BookOpen },
+  { label: "Code Files", href: "/code-files", icon: FolderCode },
 ];
 
 /** Mobile bottom navigation mirrors the sidebar. */

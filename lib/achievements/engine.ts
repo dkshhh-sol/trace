@@ -19,14 +19,14 @@ export type AchievementCategory =
 
 export const CATEGORY_META: Record<
   AchievementCategory,
-  { label: string; emoji: string }
+  { label: string; icon: string }
 > = {
-  streak: { label: "Streak", emoji: "🔥" },
-  problems: { label: "Problem Solving", emoji: "💻" },
-  topics: { label: "Topic Mastery", emoji: "📚" },
-  goals: { label: "Goals", emoji: "🎯" },
-  workspace: { label: "Workspace", emoji: "⚡" },
-  journey: { label: "Trace Journey", emoji: "🚀" },
+  streak: { label: "Streak", icon: "Flame" },
+  problems: { label: "Problem Solving", icon: "Code2" },
+  topics: { label: "Topic Mastery", icon: "BookOpen" },
+  goals: { label: "Goals", icon: "Target" },
+  workspace: { label: "Workspace", icon: "FolderCode" },
+  journey: { label: "Trace Journey", icon: "Compass" },
 };
 
 export const CATEGORY_ORDER: AchievementCategory[] = [
@@ -81,7 +81,7 @@ type AchievementDef = {
 const bool = (v: boolean) => (v ? 1 : 0);
 
 export const ACHIEVEMENTS: AchievementDef[] = [
-  // 🔥 Streak
+  // Streak
   { id: "streak_1", title: "First Day", description: "Solve a problem on any day.", category: "streak", icon: "Footprints", requirement: "Reach a 1-day streak", target: 1, progress: (i) => i.longestStreak },
   { id: "streak_3", title: "3 Day Streak", description: "Stay consistent for three days.", category: "streak", icon: "Flame", requirement: "Reach a 3-day streak", target: 3, progress: (i) => i.longestStreak },
   { id: "streak_7", title: "7 Day Streak", description: "A full week of momentum.", category: "streak", icon: "Flame", requirement: "Reach a 7-day streak", target: 7, progress: (i) => i.longestStreak },
@@ -91,7 +91,7 @@ export const ACHIEVEMENTS: AchievementDef[] = [
   { id: "streak_100", title: "100 Day Streak", description: "Triple digits of consistency.", category: "streak", icon: "Trophy", requirement: "Reach a 100-day streak", target: 100, progress: (i) => i.longestStreak },
   { id: "streak_365", title: "365 Day Streak", description: "A full year, every single day.", category: "streak", icon: "Trophy", requirement: "Reach a 365-day streak", target: 365, progress: (i) => i.longestStreak },
 
-  // 💻 Problem Solving
+  // Problem Solving
   { id: "solve_1", title: "First Problem", description: "Solve your very first problem.", category: "problems", icon: "CheckCircle2", requirement: "Solve 1 problem", target: 1, progress: (i) => i.solvedCount },
   { id: "solve_10", title: "10 Problems", description: "Ten down, momentum building.", category: "problems", icon: "CheckCircle2", requirement: "Solve 10 problems", target: 10, progress: (i) => i.solvedCount },
   { id: "solve_25", title: "25 Problems", description: "A quarter-century of solves.", category: "problems", icon: "CheckCircle2", requirement: "Solve 25 problems", target: 25, progress: (i) => i.solvedCount },
@@ -101,7 +101,7 @@ export const ACHIEVEMENTS: AchievementDef[] = [
   { id: "solve_300", title: "300 Problems", description: "Elite consistency.", category: "problems", icon: "Trophy", requirement: "Solve 300 problems", target: 300, progress: (i) => i.solvedCount },
   { id: "solve_all", title: "Complete Every Problem", description: "Solve every problem in the sheet.", category: "problems", icon: "Award", requirement: "Solve all problems", target: 1, progress: (i) => bool(i.everyProblemComplete) },
 
-  // 📚 Topic Mastery
+  // Topic Mastery
   { id: "topic_first", title: "First Topic Completed", description: "Finish every problem in a topic.", category: "topics", icon: "BookOpen", requirement: "Complete 1 topic", target: 1, progress: (i) => Math.min(i.topicsCompleted, 1) },
   { id: "topic_arrays", title: "Complete Arrays", description: "Master the Arrays step.", category: "topics", icon: "Layers", requirement: "Complete every Arrays problem", target: 1, progress: (i) => bool(i.steps.arrays) },
   { id: "topic_binary_search", title: "Complete Binary Search", description: "Master the Binary Search step.", category: "topics", icon: "Layers", requirement: "Complete every Binary Search problem", target: 1, progress: (i) => bool(i.steps.binarySearch) },
@@ -110,7 +110,7 @@ export const ACHIEVEMENTS: AchievementDef[] = [
   { id: "topic_dp", title: "Complete Dynamic Programming", description: "Master the DP step.", category: "topics", icon: "Brain", requirement: "Complete every DP problem", target: 1, progress: (i) => bool(i.steps.dp) },
   { id: "topic_all", title: "Complete Every Topic", description: "Finish every topic in the sheet.", category: "topics", icon: "GraduationCap", requirement: "Complete all topics", target: 1, progress: (i) => bool(i.everyTopicComplete) },
 
-  // 🎯 Goal Achievements
+  // Goal Achievements
   { id: "goal_first", title: "First Goal Completed", description: "Hit one of your goals.", category: "goals", icon: "Target", requirement: "Complete 1 goal", target: 1, progress: (i) => i.goalsTotalCompleted },
   { id: "goal_10", title: "Complete 10 Goals", description: "Ten goals achieved.", category: "goals", icon: "Target", requirement: "Complete 10 goals", target: 10, progress: (i) => i.goalsTotalCompleted },
   { id: "goal_50", title: "Complete 50 Goals", description: "Fifty goals achieved.", category: "goals", icon: "Trophy", requirement: "Complete 50 goals", target: 50, progress: (i) => i.goalsTotalCompleted },
@@ -118,7 +118,7 @@ export const ACHIEVEMENTS: AchievementDef[] = [
   { id: "goal_weekly_4", title: "Weekly Goal ×4", description: "Complete a weekly goal 4 weeks running.", category: "goals", icon: "CalendarCheck", requirement: "Hit a weekly goal 4 weeks running", target: 4, progress: (i) => i.goalsMaxWeeklyConsecutive },
   { id: "goal_monthly", title: "Monthly Goal", description: "Complete a monthly goal.", category: "goals", icon: "CalendarCheck", requirement: "Complete a monthly goal", target: 1, progress: (i) => Math.min(i.goalsMonthlyCompleted, 1) },
 
-  // ⚡ Workspace
+  // Workspace
   { id: "ws_file_1", title: "First Code File", description: "Create your first Code File.", category: "workspace", icon: "FileCode2", requirement: "Create 1 code file", target: 1, progress: (i) => i.codeFilesCount },
   { id: "ws_file_10", title: "10 Code Files", description: "Build out your code library.", category: "workspace", icon: "Code2", requirement: "Create 10 code files", target: 10, progress: (i) => i.codeFilesCount },
   { id: "ws_gh_connect", title: "First GitHub Connection", description: "Link your GitHub account.", category: "workspace", icon: "github", requirement: "Connect GitHub", target: 1, progress: (i) => bool(i.githubConnected) },
@@ -126,7 +126,7 @@ export const ACHIEVEMENTS: AchievementDef[] = [
   { id: "ws_commit_50", title: "50 GitHub Commits", description: "Fifty commits from Trace.", category: "workspace", icon: "github", requirement: "Make 50 commits", target: 50, progress: (i) => i.githubCommits },
   { id: "ws_commit_100", title: "100 GitHub Commits", description: "A hundred commits from Trace.", category: "workspace", icon: "github", requirement: "Make 100 commits", target: 100, progress: (i) => i.githubCommits },
 
-  // 🚀 Trace Journey
+  // Trace Journey
   { id: "journey_joined", title: "Joined Trace", description: "Welcome aboard.", category: "journey", icon: "Rocket", requirement: "Create your account", target: 1, progress: () => 1 },
   { id: "journey_first_lecture", title: "Completed First Lecture", description: "Finish your first lecture problem.", category: "journey", icon: "BookOpen", requirement: "Complete 1 lecture", target: 1, progress: (i) => Math.min(i.solvedCount, 1) },
   { id: "journey_first_revision", title: "Completed First Revision", description: "Revise a solved problem.", category: "journey", icon: "Brain", requirement: "Complete 1 revision", target: 1, progress: (i) => Math.min(i.revisionsCount, 1) },

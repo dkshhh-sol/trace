@@ -198,7 +198,7 @@ export function LectureWorkspace({
         content,
       });
       toast(
-        res.updated ? "Updated in Code Files ✓" : "Saved to Code Files ✓",
+        res.updated ? "Updated in Code Files" : "Saved to Code Files",
         "success",
       );
     } catch {

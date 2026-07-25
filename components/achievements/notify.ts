@@ -1,4 +1,4 @@
-import { toast } from "@/components/ui/toast";
+import { toastRich } from "@/components/ui/toast";
 
 export type UnlockNotice = {
   id: string;
@@ -8,17 +8,27 @@ export type UnlockNotice = {
 };
 
 /**
- * Surface newly-unlocked achievements as subtle toasts. Batches large unlock
- * bursts (e.g. an existing user's first sync) into a single summary toast so
+ * Surface newly-unlocked achievements as subtle toasts (Trophy icon, title,
+ * achievement name). Batches large unlock bursts into a single summary toast so
  * the user is never spammed.
  */
 export function notifyUnlocks(list: UnlockNotice[]) {
   if (!list || list.length === 0) return;
   if (list.length > 3) {
-    toast(`🏆 ${list.length} achievements unlocked`, "success");
+    toastRich({
+      icon: "Trophy",
+      title: "Achievements unlocked",
+      message: `${list.length} new achievements`,
+      variant: "success",
+    });
     return;
   }
   for (const a of list) {
-    toast(`🏆 Achievement Unlocked — ${a.title}`, "success");
+    toastRich({
+      icon: "Trophy",
+      title: "Achievement unlocked",
+      message: a.title,
+      variant: "success",
+    });
   }
 }

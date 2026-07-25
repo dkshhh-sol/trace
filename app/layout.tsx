@@ -20,11 +20,11 @@ const instrumentSerif = Instrument_Serif({
 export const metadata: Metadata = {
   metadataBase: new URL("https://trace.dev"),
   title: {
-    default: "Trace — The modern way to complete Striver's A2Z DSA Sheet",
+    default: "Trace: The modern way to complete Striver's A2Z DSA Sheet",
     template: "%s · Trace",
   },
   description:
-    "Trace is the focused workspace for Striver's A2Z DSA Sheet — watch the mapped lecture, solve on LeetCode/GFG, take notes and track your progress, all in one place. No more juggling tabs.",
+    "Trace is the focused workspace for Striver's A2Z DSA Sheet. Watch the mapped lecture, solve on LeetCode/GFG, take notes and track your progress, all in one place. No more juggling tabs.",
   keywords: [
     "Striver A2Z",
     "A2Z DSA Sheet",
@@ -46,9 +46,9 @@ export const metadata: Metadata = {
     apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
   },
   openGraph: {
-    title: "Trace — Complete Striver's A2Z DSA Sheet",
+    title: "Trace: Complete Striver's A2Z DSA Sheet",
     description:
-      "Watch the lecture, solve the problem, track your progress — everything you need to finish Striver A2Z in one place.",
+      "Watch the lecture, solve the problem, and track your progress. Everything you need to finish Striver A2Z in one place.",
     type: "website",
     siteName: "Trace",
     images: [
@@ -57,7 +57,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Trace — Complete Striver's A2Z DSA Sheet",
+    title: "Trace: Complete Striver's A2Z DSA Sheet",
     description:
       "Everything you need to finish Striver A2Z in one focused workspace.",
     images: ["/android-chrome-512x512.png"],

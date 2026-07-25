@@ -158,7 +158,7 @@ export function Hero({ isAuthed }: { isAuthed: boolean }) {
           >
             The complete workspace for mastering Striver&rsquo;s A2Z Sheet. Watch
             lectures, solve problems, track progress, revise intelligently, and
-            stay consistent—all in one place.
+            stay consistent, all in one place.
           </p>
 
           {/* Primary CTAs */}

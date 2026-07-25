@@ -263,7 +263,7 @@ function ActivitySection({
       </div>
       {empty && (
         <p className="mt-3 text-sm text-muted-foreground">
-          Start solving problems to build your learning history.
+          No activity recorded yet.
         </p>
       )}
     </section>

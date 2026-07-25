@@ -23,7 +23,7 @@ export default async function CodeFilesPage({
           Code <span className="font-serif italic text-gradient">Files</span>
         </h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          Your personal code library — edit with full highlighting, organize in
+          Your personal code library. Edit with full highlighting, organize in
           folders, download, or commit straight to GitHub.
         </p>
       </div>
