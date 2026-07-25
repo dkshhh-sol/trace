@@ -2,7 +2,9 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { LifeBuoy } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { openSupport } from "@/components/support/support-panel";
 import { bottomNavItems } from "./nav-items";
 
 /**
@@ -39,6 +41,16 @@ export function BottomNav() {
             </li>
           );
         })}
+        <li className="flex-1">
+          <button
+            type="button"
+            onClick={openSupport}
+            className="flex w-full flex-col items-center gap-1 px-1 py-2.5 text-[11px] text-muted-foreground transition-colors hover:text-foreground"
+          >
+            <LifeBuoy className="size-5" />
+            <span className="truncate">Support</span>
+          </button>
+        </li>
       </ul>
     </nav>
   );

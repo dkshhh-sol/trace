@@ -23,6 +23,7 @@ import {
   type AchievementInput,
   type AchievementView,
 } from "@/lib/achievements/engine";
+import { emitEvent } from "@/lib/events/events";
 import { striverA2Z } from "@/lib/content/striver";
 
 export type NewlyUnlocked = {
@@ -150,6 +151,13 @@ export async function syncAchievements(
       .insert(userAchievements)
       .values(toInsert.map((t) => ({ userId, ...t })))
       .onConflictDoNothing();
+    for (const t of toInsert) {
+      await emitEvent({
+        type: "achievement.unlocked",
+        userId,
+        achievementId: t.achievementId,
+      });
+    }
   }
 
   // Final view with the freshly-inserted unlocks reflected.

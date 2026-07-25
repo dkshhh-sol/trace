@@ -4,6 +4,7 @@ import { auth } from "@/lib/auth";
 import { exchangeCode, safeReturnTo } from "@/lib/github/oauth";
 import { fetchGitHubUser } from "@/lib/github/api";
 import { upsertConnection } from "@/lib/github/connection";
+import { emitEvent } from "@/lib/events/events";
 
 export const runtime = "nodejs";
 
@@ -47,6 +48,7 @@ export async function GET(req: NextRequest) {
       accessToken,
       scope,
     });
+    await emitEvent({ type: "github.connected", userId: session.user.id });
 
     return back(origin, returnTo, "connected");
   } catch {

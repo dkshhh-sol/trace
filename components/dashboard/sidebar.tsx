@@ -3,9 +3,10 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { PanelLeftClose, PanelLeft } from "lucide-react";
+import { PanelLeftClose, PanelLeft, LifeBuoy } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Logo } from "@/components/ui/logo";
+import { openSupport } from "@/components/support/support-panel";
 import { navItems } from "./nav-items";
 
 /**
@@ -57,6 +58,22 @@ export function Sidebar() {
           );
         })}
       </nav>
+
+      {/* Feedback & Support — pinned to the bottom, opens a slide-over */}
+      <div className="px-3 pb-1">
+        <button
+          type="button"
+          onClick={openSupport}
+          title={collapsed ? "Feedback & Support" : undefined}
+          className={cn(
+            "flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-accent/60 hover:text-foreground",
+            collapsed && "justify-center px-0",
+          )}
+        >
+          <LifeBuoy className="size-4 shrink-0" />
+          {!collapsed && <span className="flex-1 truncate text-left">Feedback &amp; Support</span>}
+        </button>
+      </div>
 
       <div className="border-t border-border p-3">
         <button

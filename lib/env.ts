@@ -38,6 +38,11 @@ const serverSchema = z.object({
   // 32-byte key (hex = 64 chars, or base64) used to encrypt stored OAuth tokens
   // at rest. Generate with: openssl rand -hex 32
   ENCRYPTION_KEY: z.string().min(32).optional(),
+  // ---- Trace Console (internal admin) ----
+  // Comma-separated list of admin emails allowed into the console.
+  ADMIN_EMAILS: z.string().optional(),
+  // Optional second-factor password gate for the console.
+  ADMIN_PANEL_PASSWORD: z.string().optional(),
 });
 
 const publicSchema = z.object({

@@ -489,3 +489,31 @@ export function computeGoalAchievementStats(
 
   return stats;
 }
+
+/** Current streak from a solve list (platform admin: per-user, page-bounded). */
+export function currentStreakFromSolves(solves: Solve[]): number {
+  const dates = new Set<string>();
+  for (const s of solves) if (s.completedAt) dates.add(dayKey(s.completedAt));
+  return computeStreaks(dates).current;
+}
+
+/**
+ * Platform-wide solved distribution per topic, given a flat list of solved
+ * problem ids (duplicates across users allowed — each counts once per solve).
+ * Returns every topic with its solved count and total size.
+ */
+export function topicSolveDistribution(
+  problemIds: string[],
+): { topic: string; solved: number; total: number }[] {
+  const solvedByTopic = new Map<string, number>();
+  for (const id of problemIds) {
+    const topic = problemToTopic.get(id);
+    if (!topic) continue;
+    solvedByTopic.set(topic, (solvedByTopic.get(topic) ?? 0) + 1);
+  }
+  return topicProblemIds.map((t) => ({
+    topic: t.topic,
+    solved: solvedByTopic.get(t.topic) ?? 0,
+    total: t.ids.length,
+  }));
+}
