@@ -11,10 +11,15 @@ import {
   Layers,
   TrendingUp,
   Lock,
+  Pencil,
+  Check,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { signOutAction } from "@/lib/auth/actions";
-import type { ProfileStats, HeatmapDay } from "@/lib/profile/types";
+import { updateGoals } from "@/lib/progress/actions";
+import { Heatmap, HeatmapLegend } from "./heatmap";
+import { CountUp } from "./count-up";
+import type { ProfileStats } from "@/lib/profile/types";
 
 type SessionUser = {
   name?: string | null;
@@ -39,6 +44,7 @@ export function ProfilePanel({ user }: { user: SessionUser }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [imgError, setImgError] = useState(false);
+  const [editing, setEditing] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
 
@@ -57,6 +63,7 @@ export function ProfilePanel({ user }: { user: SessionUser }) {
 
   const close = useCallback(() => {
     setShow(false);
+    setEditing(false);
     setTimeout(() => setMounted(false), 260);
     triggerRef.current?.focus();
   }, []);
@@ -67,15 +74,16 @@ export function ProfilePanel({ user }: { user: SessionUser }) {
       if (e.key === "Escape") close();
     }
     document.addEventListener("keydown", onKey);
-    // lock body scroll while open
-    const prevOverflow = document.body.style.overflow;
+    const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     closeRef.current?.focus();
     return () => {
       document.removeEventListener("keydown", onKey);
-      document.body.style.overflow = prevOverflow;
+      document.body.style.overflow = prev;
     };
   }, [mounted, close]);
+
+  const solvedZero = stats?.solved === 0;
 
   return (
     <>
@@ -103,7 +111,6 @@ export function ProfilePanel({ user }: { user: SessionUser }) {
 
       {mounted && (
         <div className="fixed inset-0 z-[70]">
-          {/* Backdrop */}
           <div
             aria-hidden="true"
             onClick={close}
@@ -113,7 +120,6 @@ export function ProfilePanel({ user }: { user: SessionUser }) {
             )}
           />
 
-          {/* Panel: header / scrollable body / pinned footer */}
           <aside
             role="dialog"
             aria-modal="true"
@@ -123,7 +129,6 @@ export function ProfilePanel({ user }: { user: SessionUser }) {
               show ? "translate-x-0" : "translate-x-full",
             )}
           >
-            {/* Header (fixed) */}
             <header className="flex shrink-0 items-center justify-between border-b border-border px-6 py-4">
               <span className="text-sm font-medium text-muted-foreground">
                 Profile
@@ -139,7 +144,6 @@ export function ProfilePanel({ user }: { user: SessionUser }) {
               </button>
             </header>
 
-            {/* Body (scrolls independently) */}
             <div className="min-h-0 flex-1 overflow-y-auto">
               <div className="relative">
                 <div
@@ -147,7 +151,11 @@ export function ProfilePanel({ user }: { user: SessionUser }) {
                   className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-brand/[0.12] to-transparent"
                 />
                 <div className="relative space-y-8 px-6 py-6">
-                  <ProfileHeader user={user} stats={stats} imgErrored={imgError} />
+                  <ProfileHeader
+                    user={user}
+                    stats={stats}
+                    imgErrored={imgError}
+                  />
 
                   {error ? (
                     <p className="text-sm text-muted-foreground">
@@ -158,9 +166,9 @@ export function ProfilePanel({ user }: { user: SessionUser }) {
                     <PanelSkeleton />
                   ) : (
                     <>
-                      <Heatmap days={stats.heatmap} />
+                      <ActivitySection stats={stats} empty={solvedZero} />
                       <Statistics stats={stats} />
-                      <Goals stats={stats} />
+                      <Goals stats={stats} onEdit={() => setEditing(true)} />
                     </>
                   )}
 
@@ -170,11 +178,24 @@ export function ProfilePanel({ user }: { user: SessionUser }) {
               </div>
             </div>
 
-            {/* Footer (pinned) */}
             <footer className="shrink-0 border-t border-border p-4">
               <SignOutButton />
             </footer>
           </aside>
+
+          {editing && stats && (
+            <EditGoalsModal
+              daily={stats.dailyGoal}
+              weekly={stats.weeklyGoal}
+              onCancel={() => setEditing(false)}
+              onSaved={(daily, weekly) => {
+                setStats((prev) =>
+                  prev ? { ...prev, dailyGoal: daily, weeklyGoal: weekly } : prev,
+                );
+                setEditing(false);
+              }}
+            />
+          )}
         </div>
       )}
     </>
@@ -229,65 +250,38 @@ function ProfileHeader({
   );
 }
 
-function heatLevel(count: number) {
-  if (count <= 0) return "bg-white/[0.05]";
-  if (count === 1) return "bg-brand/30";
-  if (count <= 3) return "bg-brand/50";
-  if (count <= 5) return "bg-brand/75";
-  return "bg-brand";
-}
-
-function Heatmap({ days }: { days: HeatmapDay[] }) {
-  const firstDay = days[0]
-    ? new Date(days[0].date + "T00:00:00Z").getUTCDay()
-    : 0;
-  const cells: (HeatmapDay | null)[] = [
-    ...Array.from({ length: firstDay }, () => null),
-    ...days,
-  ];
-
+function ActivitySection({
+  stats,
+  empty,
+}: {
+  stats: ProfileStats;
+  empty: boolean;
+}) {
   return (
-    <section>
+    <section className="animate-in fade-in-0 duration-500">
       <h3 className="mb-3 text-sm font-medium text-foreground">
         Learning activity
       </h3>
-      <div className="grid grid-flow-col grid-rows-7 gap-1 overflow-x-auto pb-1">
-        {cells.map((d, i) =>
-          d ? (
-            <div
-              key={d.date}
-              title={`${d.date}\n${d.count} problem${
-                d.count === 1 ? "" : "s"
-              } solved${
-                d.topics.length ? `\nTopics: ${d.topics.join(", ")}` : ""
-              }`}
-              className={cn("size-3 rounded-[3px]", heatLevel(d.count))}
-            />
-          ) : (
-            <div key={`pad-${i}`} className="size-3" />
-          ),
-        )}
+      <Heatmap days={stats.heatmap} />
+      <div className="mt-3">
+        <HeatmapLegend />
       </div>
-      <div className="mt-3 flex items-center justify-end gap-1.5 text-[10px] text-muted-foreground">
-        <span>Less</span>
-        <span className="size-3 rounded-[3px] bg-white/[0.05]" />
-        <span className="size-3 rounded-[3px] bg-brand/30" />
-        <span className="size-3 rounded-[3px] bg-brand/50" />
-        <span className="size-3 rounded-[3px] bg-brand/75" />
-        <span className="size-3 rounded-[3px] bg-brand" />
-        <span>More</span>
-      </div>
+      {empty && (
+        <p className="mt-3 text-sm text-muted-foreground">
+          Start solving problems to build your learning streak.
+        </p>
+      )}
     </section>
   );
 }
 
 function Statistics({ stats }: { stats: ProfileStats }) {
   const items = [
-    { icon: Flame, label: "Current streak", value: `${stats.currentStreak}d`, accent: "text-success" },
-    { icon: Trophy, label: "Longest streak", value: `${stats.longestStreak}d`, accent: "text-success" },
-    { icon: CheckCircle2, label: "Problems solved", value: `${stats.solved}`, accent: "text-success" },
-    { icon: Layers, label: "Topics completed", value: `${stats.topicsCompleted}/${stats.totalTopics}`, accent: "text-brand" },
-    { icon: TrendingUp, label: "Overall progress", value: `${stats.progressPct}%`, accent: "text-brand" },
+    { icon: Flame, label: "Current streak", value: stats.currentStreak, suffix: "d", accent: "text-success" },
+    { icon: Trophy, label: "Longest streak", value: stats.longestStreak, suffix: "d", accent: "text-success" },
+    { icon: CheckCircle2, label: "Problems solved", value: stats.solved, suffix: "", accent: "text-success" },
+    { icon: Layers, label: "Topics completed", value: stats.topicsCompleted, suffix: `/${stats.totalTopics}`, accent: "text-brand" },
+    { icon: TrendingUp, label: "Overall progress", value: stats.progressPct, suffix: "%", accent: "text-brand" },
   ];
   return (
     <section>
@@ -300,7 +294,8 @@ function Statistics({ stats }: { stats: ProfileStats }) {
               {it.label}
             </div>
             <p className="mt-2 text-2xl tracking-tight text-foreground">
-              {it.value}
+              <CountUp value={it.value} />
+              {it.suffix}
             </p>
           </div>
         ))}
@@ -320,31 +315,54 @@ function GoalBar({
 }) {
   const pct = goal > 0 ? Math.min(100, Math.round((value / goal) * 100)) : 0;
   const remaining = Math.max(0, goal - value);
+  const complete = value >= goal && goal > 0;
   return (
     <div>
       <div className="mb-1.5 flex items-center justify-between text-xs">
         <span className="text-muted-foreground">{label}</span>
-        <span className="text-foreground">
+        <span className="tabular-nums text-foreground">
           {value} / {goal}
         </span>
       </div>
       <div className="h-2 w-full overflow-hidden rounded-full bg-white/[0.06]">
         <div
-          className="h-full rounded-full bg-gradient-to-r from-brand to-[#b9b3ff]"
+          className="h-full rounded-full bg-gradient-to-r from-brand to-[#b9b3ff] transition-[width] duration-700 ease-out"
           style={{ width: `${pct}%` }}
         />
       </div>
-      <p className="mt-1 text-[11px] text-muted-foreground">
-        {remaining === 0 ? "Goal reached 🎉" : `${remaining} to go`}
+      <p className="mt-1 text-[11px]">
+        {complete ? (
+          <span className="inline-flex items-center gap-1 text-success">
+            <Check className="size-3 animate-pulse" /> Goal completed
+          </span>
+        ) : (
+          <span className="text-muted-foreground">{remaining} to go</span>
+        )}
       </p>
     </div>
   );
 }
 
-function Goals({ stats }: { stats: ProfileStats }) {
+function Goals({
+  stats,
+  onEdit,
+}: {
+  stats: ProfileStats;
+  onEdit: () => void;
+}) {
   return (
     <section>
-      <h3 className="mb-3 text-sm font-medium text-foreground">Goals</h3>
+      <div className="mb-3 flex items-center justify-between">
+        <h3 className="text-sm font-medium text-foreground">Goals</h3>
+        <button
+          type="button"
+          onClick={onEdit}
+          className="inline-flex items-center gap-1.5 rounded-lg px-2 py-1 text-xs text-muted-foreground outline-none transition-colors hover:bg-accent hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
+        >
+          <Pencil className="size-3" />
+          Edit goals
+        </button>
+      </div>
       <div className="space-y-4">
         <GoalBar label="Today" value={stats.solvedToday} goal={stats.dailyGoal} />
         <GoalBar
@@ -354,6 +372,113 @@ function Goals({ stats }: { stats: ProfileStats }) {
         />
       </div>
     </section>
+  );
+}
+
+function EditGoalsModal({
+  daily,
+  weekly,
+  onCancel,
+  onSaved,
+}: {
+  daily: number;
+  weekly: number;
+  onCancel: () => void;
+  onSaved: (daily: number, weekly: number) => void;
+}) {
+  const [d, setD] = useState(String(daily));
+  const [w, setW] = useState(String(weekly));
+  const [pending, startTransition] = useTransition();
+  const [err, setErr] = useState<string | null>(null);
+
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") onCancel();
+    }
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [onCancel]);
+
+  function save() {
+    const dn = Number(d);
+    const wn = Number(w);
+    if (!Number.isFinite(dn) || dn < 1 || !Number.isFinite(wn) || wn < 1) {
+      setErr("Enter values of 1 or more.");
+      return;
+    }
+    setErr(null);
+    startTransition(async () => {
+      try {
+        const saved = await updateGoals({ daily: dn, weekly: wn });
+        onSaved(saved.daily, saved.weekly);
+      } catch {
+        setErr("Couldn't save. Please try again.");
+      }
+    });
+  }
+
+  return (
+    <div className="absolute inset-0 z-[80] grid place-items-center p-4">
+      <div
+        aria-hidden="true"
+        onClick={onCancel}
+        className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+      />
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-label="Edit goals"
+        className="animate-in fade-in-0 zoom-in-95 surface relative w-full max-w-xs rounded-2xl p-5 duration-150"
+      >
+        <h3 className="text-base font-medium text-foreground">Edit goals</h3>
+        <div className="mt-4 space-y-4">
+          <label className="block">
+            <span className="text-xs text-muted-foreground">
+              Daily goal (problems / day)
+            </span>
+            <input
+              type="number"
+              min={1}
+              max={100}
+              value={d}
+              onChange={(e) => setD(e.target.value)}
+              className="mt-1.5 h-10 w-full rounded-lg border border-border bg-card px-3 text-sm text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            />
+          </label>
+          <label className="block">
+            <span className="text-xs text-muted-foreground">
+              Weekly goal (problems / week)
+            </span>
+            <input
+              type="number"
+              min={1}
+              max={700}
+              value={w}
+              onChange={(e) => setW(e.target.value)}
+              className="mt-1.5 h-10 w-full rounded-lg border border-border bg-card px-3 text-sm text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            />
+          </label>
+          {err && <p className="text-xs text-destructive">{err}</p>}
+        </div>
+        <div className="mt-5 flex justify-end gap-2">
+          <button
+            type="button"
+            onClick={onCancel}
+            className="inline-flex h-9 items-center rounded-lg px-3 text-sm text-muted-foreground transition-colors hover:text-foreground"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            onClick={save}
+            disabled={pending}
+            className="inline-flex h-9 items-center rounded-lg bg-foreground px-4 text-sm font-medium text-background transition-transform hover:scale-[1.02] active:scale-[0.99] disabled:opacity-60"
+          >
+            {pending ? "Saving…" : "Save"}
+          </button>
+        </div>
+      </div>
+    </div>
   );
 }
 

@@ -2,7 +2,8 @@ import { Suspense } from "react";
 import type { Metadata } from "next";
 import { getSession } from "@/lib/auth/guards";
 import { ContinueLearning } from "@/components/dashboard/widgets/continue-learning";
-import { ProgressStats } from "@/components/dashboard/progress-stats";
+import { GoalCard } from "@/components/dashboard/goal-card";
+import { ActivityWidget } from "@/components/dashboard/activity-widget";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export const metadata: Metadata = {
@@ -17,7 +18,7 @@ export default async function DashboardPage() {
     <div className="relative">
       <div className="app-glow" aria-hidden="true" />
 
-      <div className="space-y-8">
+      <div className="space-y-6">
         <div>
           <h1 className="text-2xl tracking-tight">
             Welcome back,{" "}
@@ -28,22 +29,16 @@ export default async function DashboardPage() {
           </p>
         </div>
 
-        <Suspense
-          fallback={<Skeleton className="h-64 w-full rounded-3xl" />}
-        >
+        <Suspense fallback={<Skeleton className="h-64 w-full rounded-3xl" />}>
           <ContinueLearning />
         </Suspense>
 
-        <Suspense
-          fallback={
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-              {Array.from({ length: 3 }).map((_, i) => (
-                <Skeleton key={i} className="h-28 rounded-2xl" />
-              ))}
-            </div>
-          }
-        >
-          <ProgressStats />
+        <Suspense fallback={<Skeleton className="h-44 w-full rounded-2xl" />}>
+          <GoalCard />
+        </Suspense>
+
+        <Suspense fallback={<Skeleton className="h-72 w-full rounded-2xl" />}>
+          <ActivityWidget />
         </Suspense>
       </div>
     </div>

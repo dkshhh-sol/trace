@@ -15,6 +15,13 @@
       "when": 1784311607464,
       "tag": "0001_sour_hardball",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1784997668228,
+      "tag": "0002_gigantic_elektra",
+      "breakpoints": true
     }
   ]
 }

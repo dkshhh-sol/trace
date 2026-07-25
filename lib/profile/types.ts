@@ -9,6 +9,12 @@ export type ProfileStats = {
   email: string | null;
   image: string | null;
   joinedAt: string; // ISO
+
+  // Goals (persisted)
+  dailyGoal: number;
+  weeklyGoal: number;
+
+  // Activity (derived from solves)
   solved: number;
   totalProblems: number;
   progressPct: number;
@@ -16,9 +22,9 @@ export type ProfileStats = {
   totalTopics: number;
   currentStreak: number;
   longestStreak: number;
-  dailyGoal: number;
+  activeDays: number;
+  avgPerActiveDay: number;
   solvedToday: number;
-  weeklyGoal: number;
   solvedThisWeek: number;
   heatmap: HeatmapDay[];
 };

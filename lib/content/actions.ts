@@ -46,5 +46,6 @@ export async function setProblemDone(
   }
 
   revalidatePath(`/roadmaps/${roadmapSlug}`);
+  revalidatePath("/dashboard");
   return done;
 }

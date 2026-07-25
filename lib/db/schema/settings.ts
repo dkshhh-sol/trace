@@ -19,7 +19,8 @@ export const userSettings = pgTable("user_settings", {
     .unique()
     .references(() => users.id, { onDelete: "cascade" }),
   theme: text("theme").notNull().default("system"), // system | light | dark
-  dailyGoal: integer("daily_goal").notNull().default(3),
+  dailyGoal: integer("daily_goal").notNull().default(2),
+  weeklyGoal: integer("weekly_goal").notNull().default(14),
   revisionEnabled: boolean("revision_enabled").notNull().default(true),
   notifications: boolean("notifications").notNull().default(true),
   createdAt: timestamp("created_at", { withTimezone: true, mode: "date" })
