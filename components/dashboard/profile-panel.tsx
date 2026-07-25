@@ -12,9 +12,12 @@ import {
   TrendingUp,
   Lock,
   Check,
+  Loader2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { signOutAction } from "@/lib/auth/actions";
+import { toast } from "@/components/ui/toast";
+import { GitHubMark } from "@/components/ui/github-mark";
 import { ContributionCalendar, HeatmapLegend } from "./contribution-calendar";
 import { EditGoalsButton } from "./edit-goals-modal";
 import { CountUp } from "./count-up";
@@ -400,21 +403,109 @@ function Achievements() {
   );
 }
 
+type GitHubStatus = {
+  configured: boolean;
+  connected: boolean;
+  username: string | null;
+};
+
 function AccountInfo() {
+  const [gh, setGh] = useState<GitHubStatus | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [working, setWorking] = useState(false);
+
+  useEffect(() => {
+    let active = true;
+    fetch("/api/github/status")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((s) => {
+        if (active) setGh(s);
+      })
+      .catch(() => {})
+      .finally(() => {
+        if (active) setLoading(false);
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  function connect() {
+    const returnTo = window.location.pathname + window.location.search;
+    window.location.href = `/api/github/connect?returnTo=${encodeURIComponent(returnTo)}`;
+  }
+
+  async function disconnect() {
+    setWorking(true);
+    try {
+      await fetch("/api/github/disconnect", { method: "POST" });
+      setGh((s) => (s ? { ...s, connected: false, username: null } : s));
+      toast("GitHub disconnected");
+    } catch {
+      toast("Couldn't disconnect. Try again.", "error");
+    } finally {
+      setWorking(false);
+    }
+  }
+
   return (
     <section>
-      <h3 className="mb-3 text-sm font-medium text-foreground">Account</h3>
+      <h3 className="mb-3 text-sm font-medium text-foreground">
+        Connected accounts
+      </h3>
       <div className="surface divide-y divide-border overflow-hidden rounded-xl">
         <div className="flex items-center justify-between gap-2 px-4 py-3">
           <span className="flex items-center gap-2 text-sm text-foreground">
             <GoogleMark className="size-4" />
-            Google account
+            Google
           </span>
           <span className="inline-flex items-center gap-1.5 text-xs text-success">
             <CheckCircle2 className="size-3.5" />
             Connected
           </span>
         </div>
+
+        <div className="flex items-center justify-between gap-2 px-4 py-3">
+          <span className="flex min-w-0 items-center gap-2 text-sm text-foreground">
+            <GitHubMark className="size-4 shrink-0" />
+            <span className="truncate">
+              GitHub
+              {gh?.connected && gh.username && (
+                <span className="ml-1.5 text-muted-foreground">
+                  @{gh.username}
+                </span>
+              )}
+            </span>
+          </span>
+          {loading ? (
+            <Loader2 className="size-4 animate-spin text-muted-foreground" />
+          ) : gh?.connected ? (
+            <button
+              type="button"
+              onClick={disconnect}
+              disabled={working}
+              className="rounded-lg px-2 py-1 text-xs text-muted-foreground transition-colors hover:text-destructive disabled:opacity-60"
+            >
+              Disconnect
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={connect}
+              disabled={gh?.configured === false}
+              title={
+                gh?.configured === false
+                  ? "GitHub isn't configured on this deployment"
+                  : undefined
+              }
+              className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-background px-2.5 py-1 text-xs font-medium text-foreground transition-colors hover:border-foreground/40 disabled:opacity-50"
+            >
+              <GitHubMark className="size-3.5" />
+              Connect
+            </button>
+          )}
+        </div>
+
         <div className="flex items-center justify-between gap-2 px-4 py-3 opacity-60">
           <span className="flex items-center gap-2 text-sm text-foreground">
             <Settings className="size-4" />

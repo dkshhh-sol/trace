@@ -6,7 +6,13 @@ import { getRoadmap, locateProblem } from "@/lib/content/striver";
 import { parseYouTube, youTubeEmbedUrl } from "@/lib/content/youtube";
 import { getSession } from "@/lib/auth/guards";
 import { getCompletedProblemIds } from "@/lib/db/queries/progress";
+import {
+  getProblemDraft,
+  getLectureLayout,
+  getRelatedFiles,
+} from "@/lib/db/queries/code";
 import { MarkDoneButton } from "@/components/roadmap/mark-done-button";
+import { LectureWorkspace } from "@/components/workspace/lecture-workspace";
 
 export async function generateMetadata({
   params,
@@ -32,9 +38,15 @@ export default async function LecturePage({
   const embed = youTubeEmbedUrl(parseYouTube(problem.youtube));
 
   const session = await getSession();
-  const completed = session?.user
-    ? await getCompletedProblemIds(session.user.id, slug)
-    : new Set<string>();
+  const userId = session?.user?.id ?? null;
+  const [completed, draft, layout, relatedFiles] = userId
+    ? await Promise.all([
+        getCompletedProblemIds(userId, slug),
+        getProblemDraft(userId, problem.id),
+        getLectureLayout(userId),
+        getRelatedFiles(userId, problem.id),
+      ])
+    : [new Set<string>(), null, { splitPct: 50, editorOpen: false }, []];
   const done = completed.has(problem.id);
 
   return (
@@ -54,24 +66,18 @@ export default async function LecturePage({
         <h1 className="mt-1 text-2xl tracking-tight">{problem.name}</h1>
       </div>
 
-      {/* Embedded player */}
-      {embed ? (
-        <div className="overflow-hidden rounded-2xl border border-border bg-black">
-          <div className="relative aspect-video">
-            <iframe
-              src={embed}
-              title={`Lecture: ${problem.name}`}
-              className="absolute inset-0 h-full w-full"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              allowFullScreen
-            />
-          </div>
-        </div>
-      ) : (
-        <div className="grid h-48 place-items-center rounded-2xl border border-border bg-card text-sm text-muted-foreground">
-          No lecture available for this item yet.
-        </div>
-      )}
+      {/* Lecture + integrated code workspace */}
+      <LectureWorkspace
+        embedUrl={embed}
+        problemName={problem.name}
+        problemId={problem.id}
+        roadmapId={slug}
+        topicId={topicName}
+        initialSplitPct={layout.splitPct}
+        initialEditorOpen={layout.editorOpen}
+        draft={draft}
+        relatedFiles={relatedFiles.map((f) => ({ id: f.id, name: f.name }))}
+      />
 
       {/* Actions */}
       <div className="flex flex-wrap items-center gap-3">

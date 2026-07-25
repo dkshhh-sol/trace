@@ -23,6 +23,10 @@ export const userSettings = pgTable("user_settings", {
   weeklyGoal: integer("weekly_goal").notNull().default(14),
   revisionEnabled: boolean("revision_enabled").notNull().default(true),
   notifications: boolean("notifications").notNull().default(true),
+  // Lecture coding-workspace layout, remembered per user (Requirement 2).
+  // Editor width as a percentage of the split; whether it is open by default.
+  lectureSplitPct: integer("lecture_split_pct").notNull().default(50),
+  lectureEditorOpen: boolean("lecture_editor_open").notNull().default(false),
   createdAt: timestamp("created_at", { withTimezone: true, mode: "date" })
     .notNull()
     .defaultNow(),

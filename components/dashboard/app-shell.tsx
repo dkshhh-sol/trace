@@ -2,6 +2,8 @@ import { Sidebar } from "./sidebar";
 import { BottomNav } from "./bottom-nav";
 import { ProfilePanel } from "./profile-panel";
 import { Logo } from "@/components/ui/logo";
+import { Toaster } from "@/components/ui/toast";
+import { GitHubReturnToast } from "@/components/workspace/github-return-toast";
 
 type SessionUser = {
   name?: string | null;
@@ -44,6 +46,8 @@ export function AppShell({
       </div>
 
       <BottomNav />
+      <Toaster />
+      <GitHubReturnToast />
     </div>
   );
 }

@@ -30,6 +30,14 @@ const serverSchema = z.object({
     message: "must be a postgres connection string",
   }),
   SANITY_API_TOKEN: z.string().min(1),
+  // ---- GitHub integration (optional) ----
+  // Required only to use "Connect GitHub" / "Commit to GitHub". The app boots
+  // without them; the features report a clear "not configured" state instead.
+  GITHUB_CLIENT_ID: z.string().min(1).optional(),
+  GITHUB_CLIENT_SECRET: z.string().min(1).optional(),
+  // 32-byte key (hex = 64 chars, or base64) used to encrypt stored OAuth tokens
+  // at rest. Generate with: openssl rand -hex 32
+  ENCRYPTION_KEY: z.string().min(32).optional(),
 });
 
 const publicSchema = z.object({
