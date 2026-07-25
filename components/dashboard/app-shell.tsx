@@ -1,6 +1,6 @@
 import { Sidebar } from "./sidebar";
 import { BottomNav } from "./bottom-nav";
-import { UserMenu } from "./user-menu";
+import { ProfilePanel } from "./profile-panel";
 import { Logo } from "@/components/ui/logo";
 
 type SessionUser = {
@@ -34,7 +34,7 @@ export function AppShell({
             <Logo />
           </div>
           <div className="flex flex-1 items-center justify-end">
-            <UserMenu user={user} />
+            <ProfilePanel user={user} />
           </div>
         </header>
 
