@@ -17,9 +17,13 @@
   --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
   --font-heading: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 
-  /* Brand (violet) — used for highlights, glows, active accents */
+  /* Brand (violet) — used ONLY for active states, progress, focus, current items */
   --color-brand: var(--brand);
   --color-brand-foreground: var(--brand-foreground);
+
+  /* Success (green) — used ONLY for solved / completed / streaks */
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
 
   /* shadcn surface + text tokens */
   --color-background: var(--background);
@@ -86,6 +90,8 @@
   --ring: oklch(0.708 0 0);
   --brand: #7c6cff;
   --brand-foreground: #ffffff;
+  --success: #1a7f37;
+  --success-foreground: #ffffff;
   --chart-1: oklch(0.646 0.222 264);
   --chart-2: oklch(0.6 0.118 185);
   --chart-3: oklch(0.398 0.07 227);
@@ -123,6 +129,8 @@
   --ring: #8b7cff;
   --brand: #8b7cff;
   --brand-foreground: #ffffff;
+  --success: #3fb950;
+  --success-foreground: #04120c;
   --chart-1: oklch(0.7 0.18 280);
   --chart-2: oklch(0.65 0.15 200);
   --chart-3: oklch(0.72 0.15 150);
@@ -185,6 +193,58 @@ body {
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+}
+
+/* Elevated surface: depth via shadow + subtle top highlight instead of borders. */
+.surface {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent 42%),
+    var(--card);
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.04),
+    0 1px 2px 0 rgba(0, 0, 0, 0.4),
+    0 12px 32px -16px rgba(0, 0, 0, 0.55);
+}
+.surface-hover {
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+.surface-hover:hover {
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.06),
+    0 2px 4px 0 rgba(0, 0, 0, 0.45),
+    0 18px 44px -18px rgba(0, 0, 0, 0.6);
+}
+
+/* Hero card: the "Continue Learning" surface — brand glow + depth. */
+.card-hero {
+  background:
+    radial-gradient(130% 130% at 0% 0%, color-mix(in oklab, var(--brand) 16%, transparent) 0%, transparent 55%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent 45%),
+    var(--card);
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.06),
+    0 24px 70px -28px color-mix(in oklab, var(--brand) 45%, black);
+}
+
+/* Ambient purple glow shared by landing + app so they feel like one product. */
+.app-glow {
+  position: absolute;
+  inset: 0;
+  z-index: -10;
+  overflow: hidden;
+  pointer-events: none;
+}
+.app-glow::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: -160px;
+  height: 420px;
+  width: 720px;
+  transform: translateX(-50%);
+  border-radius: 9999px;
+  background: color-mix(in oklab, var(--brand) 18%, transparent);
+  filter: blur(130px);
 }
 
 /* Reveal-on-load animation (respects reduced motion) */

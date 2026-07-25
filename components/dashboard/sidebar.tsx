@@ -53,11 +53,6 @@ export function Sidebar() {
               {!collapsed && (
                 <span className="flex-1 truncate">{item.label}</span>
               )}
-              {!collapsed && item.comingSoon && (
-                <span className="rounded bg-white/[0.06] px-1.5 py-0.5 text-[10px] text-muted-foreground">
-                  soon
-                </span>
-              )}
             </Link>
           );
         })}

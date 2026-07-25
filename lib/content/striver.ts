@@ -21,6 +21,32 @@ export function stepProblemCount(step: StriverRoadmap["steps"][number]): number 
 
 import type { StriverProblem } from "./types";
 
+export type ResumePoint = {
+  problem: StriverProblem | null; // null when the roadmap is complete
+  stepName: string | null;
+  topicName: string | null;
+};
+
+/** The first not-yet-completed problem in course order — where the user resumes. */
+export function getResumePoint(
+  slug: string,
+  completed: Set<string>,
+): ResumePoint {
+  const roadmap = getRoadmap(slug);
+  if (roadmap) {
+    for (const step of roadmap.steps) {
+      for (const topic of step.topics) {
+        for (const p of topic.problems) {
+          if (!completed.has(p.id)) {
+            return { problem: p, stepName: step.name, topicName: topic.name };
+          }
+        }
+      }
+    }
+  }
+  return { problem: null, stepName: null, topicName: null };
+}
+
 export type LocatedProblem = {
   problem: StriverProblem;
   stepName: string;

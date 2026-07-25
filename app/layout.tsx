@@ -20,33 +20,32 @@ const instrumentSerif = Instrument_Serif({
 export const metadata: Metadata = {
   metadataBase: new URL("https://trace.dev"),
   title: {
-    default: "Trace — The workspace for technical interview prep",
+    default: "Trace — The modern way to complete Striver's A2Z DSA Sheet",
     template: "%s · Trace",
   },
   description:
-    "Trace unifies structured roadmaps, embedded lectures, coding problems, notes, spaced revision and analytics into one developer-first workspace. Stop juggling tabs and start making progress.",
+    "Trace is the focused workspace for Striver's A2Z DSA Sheet — watch the mapped lecture, solve on LeetCode/GFG, take notes and track your progress, all in one place. No more juggling tabs.",
   keywords: [
-    "interview preparation",
-    "DSA",
-    "coding roadmap",
     "Striver A2Z",
+    "A2Z DSA Sheet",
+    "DSA",
+    "interview preparation",
     "LeetCode",
-    "spaced repetition",
-    "developer tools",
+    "takeuforward",
   ],
   authors: [{ name: "Trace" }],
   openGraph: {
-    title: "Trace — The workspace for technical interview prep",
+    title: "Trace — Complete Striver's A2Z DSA Sheet",
     description:
-      "One workspace for roadmaps, lectures, problems, notes, revision and analytics.",
+      "Watch the lecture, solve the problem, track your progress — everything you need to finish Striver A2Z in one place.",
     type: "website",
     siteName: "Trace",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Trace — The workspace for technical interview prep",
+    title: "Trace — Complete Striver's A2Z DSA Sheet",
     description:
-      "One workspace for roadmaps, lectures, problems, notes, revision and analytics.",
+      "Everything you need to finish Striver A2Z in one focused workspace.",
   },
 };
 

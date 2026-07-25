@@ -1,28 +1,25 @@
 const steps = [
   {
     step: "01",
-    title: "Pick a roadmap",
-    body: "Sign in with Google and choose a path. Start with Striver A2Z or any roadmap that matches your goal.",
+    title: "Open the sheet",
+    body: "Sign in with Google and open Striver A2Z. Trace drops you exactly at your next unsolved problem.",
   },
   {
     step: "02",
-    title: "Learn & solve",
-    body: "Watch the mapped lecture, jump to the right timestamp, then solve the linked problem on your favourite judge.",
+    title: "Watch & solve",
+    body: "Watch the mapped lecture embedded in Trace, then jump to LeetCode or GeeksforGeeks to solve it.",
   },
   {
     step: "03",
-    title: "Track & revise",
-    body: "Mark progress, capture notes, and let spaced revision resurface problems right when you're about to forget them.",
+    title: "Track & continue",
+    body: "Mark it done — your progress saves to your account and Trace surfaces the next problem automatically.",
   },
 ];
 
 export function HowItWorks() {
   return (
-    <section
-      id="how-it-works"
-      className="scroll-mt-24 border-y border-white/[0.06] bg-muted/40"
-    >
-      <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-28">
+    <section id="how-it-works" className="scroll-mt-24 border-y border-white/[0.06] bg-muted/40">
+      <div className="mx-auto max-w-6xl px-4 py-24 sm:px-6 sm:py-32">
         <div className="mx-auto max-w-2xl text-center">
           <p className="text-sm font-medium text-brand">How it works</p>
           <h2 className="mt-3 text-3xl tracking-tight sm:text-4xl">
@@ -32,8 +29,8 @@ export function HowItWorks() {
             </span>
           </h2>
           <p className="mt-4 text-muted-foreground">
-            Three steps, one workspace. Trace removes the friction between
-            learning something and actually practising it.
+            Three steps, one workspace — no tab-switching between lectures,
+            problems and a spreadsheet.
           </p>
         </div>
 
@@ -43,7 +40,7 @@ export function HowItWorks() {
               {i < steps.length - 1 && (
                 <div className="absolute left-6 top-12 hidden h-px w-[calc(100%-1rem)] bg-gradient-to-r from-white/15 to-transparent md:block" />
               )}
-              <div className="grid size-12 place-items-center rounded-xl border border-white/[0.08] bg-card font-serif text-lg text-brand">
+              <div className="surface grid size-12 place-items-center rounded-xl font-serif text-lg text-brand">
                 {s.step}
               </div>
               <h3 className="mt-5 text-lg font-semibold text-foreground">

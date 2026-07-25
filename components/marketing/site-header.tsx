@@ -2,9 +2,8 @@ import Link from "next/link";
 import { Logo } from "@/components/ui/logo";
 
 const navLinks = [
-  { label: "Features", href: "#features" },
+  { label: "Why Trace", href: "#why" },
   { label: "How it works", href: "#how-it-works" },
-  { label: "Roadmaps", href: "#roadmaps" },
 ];
 
 export function SiteHeader() {
