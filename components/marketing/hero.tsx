@@ -2,7 +2,8 @@
 
 import { useEffect, useRef } from "react";
 import Link from "next/link";
-import { TrendingUp, ArrowRight, Play, ChevronDown, Flame } from "lucide-react";
+import Image from "next/image";
+import { ArrowRight, Play, ChevronDown, Flame } from "lucide-react";
 import { SignInDialog } from "@/components/marketing/sign-in-dialog";
 
 /**
@@ -237,7 +238,14 @@ function Navbar({ isAuthed }: { isAuthed: boolean }) {
       <div className="liquid-glass flex items-center justify-between gap-4 rounded-full px-6 py-3">
         {/* Left — brand */}
         <Link href="/" className="flex items-center gap-2" aria-label="Trace home">
-          <TrendingUp className="size-5 text-[#8B7DFF]" />
+          <Image
+            src="/logo.png"
+            alt="Trace"
+            width={28}
+            height={28}
+            priority
+            className="size-7 rounded-lg object-contain"
+          />
           <span className="text-lg font-semibold text-white">Trace</span>
         </Link>
 
