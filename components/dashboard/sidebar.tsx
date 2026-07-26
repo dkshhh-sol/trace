@@ -1,12 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { PanelLeftClose, PanelLeft, LifeBuoy } from "lucide-react";
+import { PanelLeftClose, PanelLeft, LifeBuoy, Bell } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Logo } from "@/components/ui/logo";
 import { openSupport } from "@/components/support/support-panel";
+import { openInbox, INBOX_UNREAD_EVENT } from "@/components/inbox/inbox-panel";
+import { getMyUnreadCount } from "@/lib/notifications/actions";
 import { navItems } from "./nav-items";
 
 /**
@@ -17,6 +19,20 @@ import { navItems } from "./nav-items";
 export function Sidebar() {
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
+  const [unread, setUnread] = useState(0);
+
+  useEffect(() => {
+    function refresh() {
+      getMyUnreadCount().then(setUnread).catch(() => {});
+    }
+    refresh();
+    window.addEventListener(INBOX_UNREAD_EVENT, refresh);
+    const id = window.setInterval(refresh, 60_000);
+    return () => {
+      window.removeEventListener(INBOX_UNREAD_EVENT, refresh);
+      window.clearInterval(id);
+    };
+  }, []);
 
   return (
     <aside
@@ -58,6 +74,31 @@ export function Sidebar() {
           );
         })}
       </nav>
+
+      {/* Inbox — pinned above Support, opens a slide-over */}
+      <div className="px-3 pb-1">
+        <button
+          type="button"
+          onClick={openInbox}
+          title={collapsed ? "Inbox" : undefined}
+          className={cn(
+            "flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-accent/60 hover:text-foreground",
+            collapsed && "justify-center px-0",
+          )}
+        >
+          <span className="relative shrink-0">
+            <Bell className="size-4" />
+            {unread > 0 && (
+              <span className="absolute -right-1 -top-1 size-2 rounded-full bg-brand" />
+            )}
+          </span>
+          {!collapsed && (
+            <span className="flex-1 truncate text-left">
+              Inbox{unread > 0 ? ` (${unread})` : ""}
+            </span>
+          )}
+        </button>
+      </div>
 
       {/* Feedback & Support — pinned to the bottom, opens a slide-over */}
       <div className="px-3 pb-1">

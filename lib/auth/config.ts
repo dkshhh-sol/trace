@@ -14,6 +14,11 @@ import {
   userSettings,
 } from "@/lib/db/schema";
 import { env } from "@/lib/env";
+import { runOnboarding, maybeSendGitHubReminder } from "@/lib/notifications/service";
+import { recordLoginDay } from "@/lib/db/queries/notifications";
+import { getUserSolves } from "@/lib/db/queries/activity";
+import { getGitHubStatus } from "@/lib/github/connection";
+import { striverA2Z } from "@/lib/content/striver";
 
 /**
  * Auth.js v5 configuration (server-only).
@@ -101,17 +106,38 @@ export const authConfig = {
         .insert(userSettings)
         .values({ userId: user.id })
         .onConflictDoNothing();
+      // Automatic onboarding: welcome inbox, explore-features inbox, welcome
+      // email. Fire-and-forget so a slow email provider never blocks sign-in;
+      // each step is independently idempotent (welcome_status guards).
+      void runOnboarding(user.id).catch(() => {});
     },
     /**
      * Stamp the last login time on every successful sign-in
-     * (Requirements 4.4, 4.6).
+     * (Requirements 4.4, 4.6), record the calendar day for onboarding rules,
+     * and evaluate the GitHub reminder trigger (never time-based).
      */
     async signIn({ user }) {
       if (!user.id) return;
-      await db
-        .update(users)
-        .set({ lastLogin: new Date() })
-        .where(eq(users.id, user.id));
+      const userId = user.id;
+      await db.update(users).set({ lastLogin: new Date() }).where(eq(users.id, userId));
+
+      void (async () => {
+        try {
+          const [distinctLoginDays, solves, gh] = await Promise.all([
+            recordLoginDay(userId),
+            getUserSolves(userId, striverA2Z.slug),
+            getGitHubStatus(userId),
+          ]);
+          await maybeSendGitHubReminder({
+            userId,
+            githubConnected: gh.connected,
+            problemsSolved: solves.length,
+            distinctLoginDays,
+          });
+        } catch {
+          // Best-effort; never block sign-in on this.
+        }
+      })();
     },
   },
   secret: env.AUTH_SECRET,

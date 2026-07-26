@@ -43,6 +43,9 @@ const serverSchema = z.object({
   ADMIN_EMAILS: z.string().optional(),
   // Optional second-factor password gate for the console.
   ADMIN_PANEL_PASSWORD: z.string().optional(),
+  // ---- Resend (optional; email falls back to a mock provider until set) ----
+  RESEND_API_KEY: z.string().optional(),
+  RESEND_FROM_EMAIL: z.string().optional(),
 });
 
 const publicSchema = z.object({

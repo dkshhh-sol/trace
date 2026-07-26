@@ -219,3 +219,256 @@ export async function adminUnlock(password: string) {
   const ok = await unlockWithPassword(String(password ?? ""));
   return { ok };
 }
+
+/* ---------------------------- Onboarding backfill --------------------------- */
+
+import { users as usersTable } from "@/lib/db/schema";
+import { runOnboarding } from "@/lib/notifications/service";
+
+/**
+ * One-time backfill: run the onboarding sequence for every existing user who
+ * has never received it. Each step inside runOnboarding is independently
+ * idempotent (guarded by welcome_status), so this is safe to run more than
+ * once and only ever sends missing pieces.
+ */
+export async function adminBackfillOnboarding() {
+  const session = await requireAdmin();
+  const rows = await db.select({ id: usersTable.id }).from(usersTable);
+
+  let processed = 0;
+  for (const row of rows) {
+    await runOnboarding(row.id);
+    processed++;
+  }
+
+  await logAdmin(session.user.id, "onboarding.backfill", undefined, { processed });
+  return { ok: true as const, processed };
+}
+
+/* ------------------------------ Communications ------------------------------ */
+
+import {
+  inboxTemplates,
+  adminMessages,
+  NOTIFICATION_PRIORITIES,
+  DELIVERY_TYPES,
+} from "@/lib/db/schema";
+import {
+  listInboxTemplates,
+  listEmailTemplates,
+  searchRecipients,
+  getAllUserIds,
+  ensureWelcomeTemplate,
+} from "@/lib/db/queries/comms-admin";
+import { listMailLogs, listInboxDeliveries } from "@/lib/db/queries/notifications";
+import { sendInbox, sendWelcomeEmail } from "@/lib/notifications/service";
+
+export async function adminListInboxTemplates() {
+  await requireAdmin();
+  return listInboxTemplates();
+}
+
+const inboxTemplateSchema = z.object({
+  title: z.string().trim().min(2).max(160),
+  body: z.string().trim().min(2).max(5000),
+  category: z.string().trim().min(1).max(60).default("general"),
+  ctaLabel: z.string().trim().max(60).optional(),
+  ctaUrl: z.string().trim().max(400).optional(),
+  priority: z.enum(NOTIFICATION_PRIORITIES).default("normal"),
+});
+
+export async function adminSaveInboxTemplate(
+  input: z.infer<typeof inboxTemplateSchema> & { id?: string },
+) {
+  const session = await requireAdmin();
+  const { id, ...data } = inboxTemplateSchema.extend({ id: z.string().uuid().optional() }).parse(input);
+
+  if (id) {
+    await db
+      .update(inboxTemplates)
+      .set({
+        title: data.title,
+        body: data.body,
+        category: data.category,
+        ctaLabel: data.ctaLabel ?? null,
+        ctaUrl: data.ctaUrl ?? null,
+        priority: data.priority,
+      })
+      .where(eq(inboxTemplates.id, id));
+    await logAdmin(session.user.id, "inbox_template.update", id);
+    return { ok: true as const, id };
+  }
+
+  const [row] = await db
+    .insert(inboxTemplates)
+    .values({
+      title: data.title,
+      body: data.body,
+      category: data.category,
+      ctaLabel: data.ctaLabel ?? null,
+      ctaUrl: data.ctaUrl ?? null,
+      priority: data.priority,
+    })
+    .returning({ id: inboxTemplates.id });
+  await logAdmin(session.user.id, "inbox_template.create", row.id);
+  return { ok: true as const, id: row.id };
+}
+
+export async function adminDuplicateInboxTemplate(id: string) {
+  const session = await requireAdmin();
+  const templateId = z.string().uuid().parse(id);
+  const [row] = await db.select().from(inboxTemplates).where(eq(inboxTemplates.id, templateId)).limit(1);
+  if (!row) throw new Error("not_found");
+  const [copy] = await db
+    .insert(inboxTemplates)
+    .values({
+      title: `${row.title} (copy)`,
+      body: row.body,
+      category: row.category,
+      ctaLabel: row.ctaLabel,
+      ctaUrl: row.ctaUrl,
+      priority: row.priority,
+    })
+    .returning({ id: inboxTemplates.id });
+  await logAdmin(session.user.id, "inbox_template.duplicate", copy.id, { from: templateId });
+  return { ok: true as const, id: copy.id };
+}
+
+export async function adminDeleteInboxTemplate(id: string) {
+  const session = await requireAdmin();
+  const templateId = z.string().uuid().parse(id);
+  await db.delete(inboxTemplates).where(eq(inboxTemplates.id, templateId));
+  await logAdmin(session.user.id, "inbox_template.delete", templateId);
+  return { ok: true as const };
+}
+
+export async function adminListEmailTemplates() {
+  await requireAdmin();
+  await ensureWelcomeTemplate();
+  return listEmailTemplates();
+}
+
+export async function adminSearchRecipients(query: string) {
+  await requireAdmin();
+  return searchRecipients(query ?? "");
+}
+
+/* -------------------------------- Sending ----------------------------------- */
+
+const RECIPIENT_MODES = ["single", "selected", "all"] as const;
+
+const sendInboxSchema = z.object({
+  mode: z.enum(RECIPIENT_MODES),
+  userIds: z.array(z.string().uuid()).max(5000).optional(),
+  title: z.string().trim().min(2).max(160),
+  body: z.string().trim().min(2).max(5000),
+  ctaLabel: z.string().trim().max(60).optional(),
+  ctaUrl: z.string().trim().max(400).optional(),
+  priority: z.enum(NOTIFICATION_PRIORITIES).default("normal"),
+});
+
+async function resolveRecipients(
+  mode: (typeof RECIPIENT_MODES)[number],
+  userIds?: string[],
+): Promise<string[]> {
+  if (mode === "all") return getAllUserIds();
+  const ids = (userIds ?? []).filter(Boolean);
+  return [...new Set(ids)];
+}
+
+export async function adminSendInboxMessage(input: z.infer<typeof sendInboxSchema>) {
+  const session = await requireAdmin();
+  const data = sendInboxSchema.parse(input);
+  const recipients = await resolveRecipients(data.mode, data.userIds);
+  if (recipients.length === 0) throw new Error("no_recipients");
+
+  const result = await sendInbox({
+    userIds: recipients,
+    type: "admin",
+    priority: data.priority,
+    title: data.title,
+    body: data.body,
+    actionLabel: data.ctaLabel,
+    actionUrl: data.ctaUrl,
+  });
+
+  await logAdmin(session.user.id, "inbox.send", undefined, {
+    mode: data.mode,
+    count: result.count,
+    title: data.title,
+  });
+  return { ok: true as const, count: result.count };
+}
+
+const sendEmailSchema = z.object({
+  mode: z.enum(RECIPIENT_MODES),
+  userIds: z.array(z.string().uuid()).max(5000).optional(),
+});
+
+/** Send the welcome email template to the chosen recipients (mock until Resend is configured). */
+export async function adminSendEmail(input: z.infer<typeof sendEmailSchema>) {
+  const session = await requireAdmin();
+  const data = sendEmailSchema.parse(input);
+  const recipients = await resolveRecipients(data.mode, data.userIds);
+  if (recipients.length === 0) throw new Error("no_recipients");
+
+  let sent = 0;
+  for (const userId of recipients) {
+    await sendWelcomeEmail(userId);
+    sent++;
+  }
+
+  await logAdmin(session.user.id, "email.send", undefined, { mode: data.mode, count: sent });
+  return { ok: true as const, count: sent };
+}
+
+/* -------------------------------- Broadcast ---------------------------------- */
+
+const broadcastSchema = z.object({
+  title: z.string().trim().min(2).max(160),
+  body: z.string().trim().min(2).max(5000),
+  deliveryType: z.enum(DELIVERY_TYPES),
+  published: z.boolean(),
+});
+
+export async function adminCreateBroadcast(input: z.infer<typeof broadcastSchema>) {
+  const session = await requireAdmin();
+  const data = broadcastSchema.parse(input);
+
+  const [row] = await db
+    .insert(adminMessages)
+    .values({ ...data, createdBy: session.user.id })
+    .returning({ id: adminMessages.id });
+
+  if (data.published) {
+    if (data.deliveryType === "inbox" || data.deliveryType === "both") {
+      const ids = await getAllUserIds();
+      await sendInbox({
+        userIds: ids,
+        type: "announcement",
+        priority: "normal",
+        title: data.title,
+        body: data.body,
+      });
+    }
+    // Email delivery for broadcasts stays disabled until Resend is configured;
+    // the mock provider already reports "disabled" per-recipient via mail_logs
+    // if this is later wired to iterate recipients.
+  }
+
+  await logAdmin(session.user.id, "broadcast.create", row.id, {
+    deliveryType: data.deliveryType,
+    published: data.published,
+  });
+  return { ok: true as const, id: row.id };
+}
+
+export async function adminMailLogs(page: number) {
+  await requireAdmin();
+  return listMailLogs(Math.max(0, Math.floor(page || 0)));
+}
+
+export async function adminInboxDeliveries(page: number) {
+  await requireAdmin();
+  return listInboxDeliveries(Math.max(0, Math.floor(page || 0)));
+}

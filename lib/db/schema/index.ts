@@ -6,3 +6,4 @@ export * from "./code";
 export * from "./github";
 export * from "./achievements";
 export * from "./ops";
+export * from "./comms";

@@ -16,6 +16,12 @@ import {
   Trash2,
   Loader2,
   X,
+  MessageCircle,
+  Bell,
+  Mail,
+  Send,
+  Copy,
+  Eye,
   type LucideIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -36,6 +42,18 @@ import {
   adminSettings,
   adminUpdateSettings,
   adminContent,
+  adminListInboxTemplates,
+  adminSaveInboxTemplate,
+  adminDuplicateInboxTemplate,
+  adminDeleteInboxTemplate,
+  adminListEmailTemplates,
+  adminSearchRecipients,
+  adminSendInboxMessage,
+  adminSendEmail,
+  adminCreateBroadcast,
+  adminMailLogs,
+  adminInboxDeliveries,
+  adminBackfillOnboarding,
 } from "@/lib/admin/actions";
 
 type TabKey =
@@ -46,6 +64,7 @@ type TabKey =
   | "features"
   | "announcements"
   | "content"
+  | "communications"
   | "settings";
 
 const TABS: { key: TabKey; label: string; Icon: LucideIcon }[] = [
@@ -56,6 +75,7 @@ const TABS: { key: TabKey; label: string; Icon: LucideIcon }[] = [
   { key: "features", label: "Feature Requests", Icon: Lightbulb },
   { key: "announcements", label: "Announcements", Icon: Megaphone },
   { key: "content", label: "Content", Icon: FileText },
+  { key: "communications", label: "Communications", Icon: MessageCircle },
   { key: "settings", label: "Settings", Icon: Settings2 },
 ];
 
@@ -100,6 +120,7 @@ export function Console({ adminEmail }: { adminEmail: string }) {
           {tab === "features" && <FeaturesSection />}
           {tab === "announcements" && <AnnouncementsSection />}
           {tab === "content" && <ContentSection />}
+          {tab === "communications" && <CommunicationsSection />}
           {tab === "settings" && <SettingsSection />}
         </main>
       </div>
@@ -1225,5 +1246,792 @@ function Toggle({
         />
       </button>
     </label>
+  );
+}
+
+/* ----------------------------- Communications ------------------------------- */
+
+type CommTab = "inbox_msg" | "inbox_templates" | "email_templates" | "broadcast" | "logs";
+
+const COMM_TABS: { key: CommTab; label: string; Icon: LucideIcon }[] = [
+  { key: "inbox_msg", label: "Inbox", Icon: Bell },
+  { key: "inbox_templates", label: "Inbox Templates", Icon: MessageCircle },
+  { key: "email_templates", label: "Email Templates", Icon: Mail },
+  { key: "broadcast", label: "Broadcast", Icon: Megaphone },
+  { key: "logs", label: "Delivery Logs", Icon: FileText },
+];
+
+function CommunicationsSection() {
+  const [tab, setTab] = useState<CommTab>("inbox_msg");
+  return (
+    <Panel title="Communications">
+      <div className="mb-4 flex gap-1 overflow-x-auto">
+        {COMM_TABS.map((t) => (
+          <button
+            key={t.key}
+            type="button"
+            onClick={() => setTab(t.key)}
+            className={cn(
+              "inline-flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs transition-colors",
+              tab === t.key
+                ? "bg-accent text-foreground"
+                : "text-muted-foreground hover:bg-accent/60 hover:text-foreground",
+            )}
+          >
+            <t.Icon className="size-3.5" />
+            {t.label}
+          </button>
+        ))}
+      </div>
+
+      {tab === "inbox_msg" && <SendInboxSection />}
+      {tab === "inbox_templates" && <InboxTemplatesSection />}
+      {tab === "email_templates" && <EmailTemplatesSection />}
+      {tab === "broadcast" && <BroadcastSection />}
+      {tab === "logs" && <DeliveryLogsSection />}
+
+      <div className="mt-6 border-t border-border pt-4">
+        <OnboardingBackfill />
+      </div>
+    </Panel>
+  );
+}
+
+function OnboardingBackfill() {
+  const [running, setRunning] = useState(false);
+
+  async function run() {
+    setRunning(true);
+    try {
+      const res = await adminBackfillOnboarding();
+      toast(`Onboarding processed for ${res.processed} users.`, "success");
+    } catch {
+      toast("Couldn't run the onboarding backfill.", "error");
+    } finally {
+      setRunning(false);
+    }
+  }
+
+  return (
+    <div className="flex items-center justify-between gap-3 text-xs text-muted-foreground">
+      <p>
+        Send onboarding (welcome inbox, explore inbox, welcome email) to every
+        existing user who has not yet received it. Safe to run more than once.
+      </p>
+      <button
+        type="button"
+        onClick={run}
+        disabled={running}
+        className="shrink-0 rounded-lg border border-border px-3 py-1.5 text-xs text-foreground transition-colors hover:border-foreground/40 disabled:opacity-60"
+      >
+        {running ? "Running…" : "Run onboarding backfill"}
+      </button>
+    </div>
+  );
+}
+
+type Recipient = { id: string; name: string | null; email: string; image: string | null };
+
+function RecipientPicker({
+  mode,
+  setMode,
+  selected,
+  setSelected,
+}: {
+  mode: "single" | "selected" | "all";
+  setMode: (m: "single" | "selected" | "all") => void;
+  selected: Recipient[];
+  setSelected: (r: Recipient[]) => void;
+}) {
+  const [query, setQuery] = useState("");
+  const [results, setResults] = useState<Recipient[]>([]);
+  const [searching, setSearching] = useState(false);
+
+  useEffect(() => {
+    if (mode === "all") return;
+    let active = true;
+    adminSearchRecipients(query)
+      .then((r) => active && setResults(r as Recipient[]))
+      .catch(() => {})
+      .finally(() => active && setSearching(false));
+    return () => {
+      active = false;
+    };
+  }, [query, mode]);
+
+  function toggle(r: Recipient) {
+    const exists = selected.some((s) => s.id === r.id);
+    if (mode === "single") {
+      setSelected(exists ? [] : [r]);
+      return;
+    }
+    setSelected(exists ? selected.filter((s) => s.id !== r.id) : [...selected, r]);
+  }
+
+  return (
+    <div className="space-y-2">
+      <div className="flex gap-2">
+        {(["single", "selected", "all"] as const).map((m) => (
+          <button
+            key={m}
+            type="button"
+            onClick={() => setMode(m)}
+            className={cn(
+              "rounded-lg px-2.5 py-1 text-xs capitalize transition-colors",
+              mode === m ? "bg-accent text-foreground" : "text-muted-foreground hover:text-foreground",
+            )}
+          >
+            {m === "single" ? "Single user" : m === "selected" ? "Multiple users" : "All users"}
+          </button>
+        ))}
+      </div>
+
+      {mode !== "all" && (
+        <>
+          <div className="flex items-center gap-2 rounded-lg border border-border bg-background px-2.5">
+            <Search className="size-3.5 text-muted-foreground" />
+            <input
+              value={query}
+              onChange={(e) => {
+                setSearching(true);
+                setQuery(e.target.value);
+              }}
+              placeholder="Search name or email"
+              className="h-9 w-full bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground/60"
+            />
+          </div>
+          <div className="max-h-40 space-y-1 overflow-y-auto rounded-lg border border-border p-1.5">
+            {searching ? (
+              <div className="py-3 text-center text-xs text-muted-foreground">Searching…</div>
+            ) : (
+              results.map((r) => {
+                const active = selected.some((s) => s.id === r.id);
+                return (
+                  <button
+                    key={r.id}
+                    type="button"
+                    onClick={() => toggle(r)}
+                    className={cn(
+                      "flex w-full items-center justify-between rounded-lg px-2 py-1.5 text-left text-xs transition-colors",
+                      active ? "bg-brand/15 text-foreground" : "text-muted-foreground hover:bg-accent/40",
+                    )}
+                  >
+                    <span className="truncate">{r.name ?? r.email}</span>
+                    {active && <span className="text-brand">Selected</span>}
+                  </button>
+                );
+              })
+            )}
+          </div>
+          {selected.length > 0 && (
+            <p className="text-xs text-muted-foreground">{selected.length} selected</p>
+          )}
+        </>
+      )}
+    </div>
+  );
+}
+
+function SendInboxSection() {
+  const [mode, setMode] = useState<"single" | "selected" | "all">("single");
+  const [selected, setSelected] = useState<Recipient[]>([]);
+  const [title, setTitle] = useState("");
+  const [body, setBody] = useState("");
+  const [ctaLabel, setCtaLabel] = useState("");
+  const [ctaUrl, setCtaUrl] = useState("");
+  const [sending, setSending] = useState(false);
+
+  async function send() {
+    if (title.trim().length < 2 || body.trim().length < 2) {
+      toast("Add a title and body.", "error");
+      return;
+    }
+    if (mode !== "all" && selected.length === 0) {
+      toast("Choose at least one recipient.", "error");
+      return;
+    }
+    setSending(true);
+    try {
+      const res = await adminSendInboxMessage({
+        mode,
+        userIds: selected.map((s) => s.id),
+        title,
+        body,
+        ctaLabel: ctaLabel || undefined,
+        ctaUrl: ctaUrl || undefined,
+        priority: "normal",
+      });
+      toast(`Sent to ${res.count} recipient${res.count === 1 ? "" : "s"}.`, "success");
+      setTitle("");
+      setBody("");
+      setCtaLabel("");
+      setCtaUrl("");
+      setSelected([]);
+    } catch {
+      toast("Couldn't send the message.", "error");
+    } finally {
+      setSending(false);
+    }
+  }
+
+  return (
+    <div className="surface max-w-lg space-y-3 rounded-xl p-4">
+      <RecipientPicker mode={mode} setMode={setMode} selected={selected} setSelected={setSelected} />
+      <input
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+        placeholder="Title"
+        className="h-9 w-full rounded-lg border border-border bg-background px-3 text-sm text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      />
+      <textarea
+        value={body}
+        onChange={(e) => setBody(e.target.value)}
+        rows={3}
+        placeholder="Message body"
+        className="w-full resize-none rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      />
+      <div className="grid grid-cols-2 gap-2">
+        <input
+          value={ctaLabel}
+          onChange={(e) => setCtaLabel(e.target.value)}
+          placeholder="CTA label (optional)"
+          className="h-9 rounded-lg border border-border bg-background px-3 text-sm text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        />
+        <input
+          value={ctaUrl}
+          onChange={(e) => setCtaUrl(e.target.value)}
+          placeholder="CTA URL (optional)"
+          className="h-9 rounded-lg border border-border bg-background px-3 text-sm text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        />
+      </div>
+      <div className="flex justify-end">
+        <button
+          type="button"
+          onClick={send}
+          disabled={sending}
+          className="inline-flex h-9 items-center gap-1.5 rounded-lg bg-foreground px-4 text-sm font-medium text-background disabled:opacity-60"
+        >
+          <Send className="size-4" />
+          {sending ? "Sending…" : "Send"}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+type InboxTemplate = {
+  id: string;
+  title: string;
+  body: string;
+  category: string;
+  ctaLabel: string | null;
+  ctaUrl: string | null;
+  priority: string;
+  createdAt?: string;
+};
+
+function InboxTemplatesSection() {
+  const { data, loading, setData } = useAsync(() => adminListInboxTemplates());
+  const [editing, setEditing] = useState<InboxTemplate | null>(null);
+  const [preview, setPreview] = useState<InboxTemplate | null>(null);
+  const list = data as InboxTemplate[] | null;
+
+  async function refresh() {
+    setData(await adminListInboxTemplates());
+  }
+
+  async function duplicate(id: string) {
+    try {
+      await adminDuplicateInboxTemplate(id);
+      toast("Template duplicated.", "success");
+      await refresh();
+    } catch {
+      toast("Couldn't duplicate template.", "error");
+    }
+  }
+
+  async function remove(id: string) {
+    try {
+      await adminDeleteInboxTemplate(id);
+      toast("Template deleted.", "success");
+      await refresh();
+    } catch {
+      toast("Couldn't delete template.", "error");
+    }
+  }
+
+  return (
+    <div className="space-y-3">
+      <div className="flex justify-end">
+        <button
+          type="button"
+          onClick={() =>
+            setEditing({ id: "", title: "", body: "", category: "general", ctaLabel: null, ctaUrl: null, priority: "normal" })
+          }
+          className="inline-flex h-8 items-center rounded-lg bg-foreground px-3 text-xs font-medium text-background"
+        >
+          New template
+        </button>
+      </div>
+
+      {!list ? (
+        <SectionState loading={loading} />
+      ) : (
+        <div className="space-y-2">
+          {list.map((t) => (
+            <div key={t.id} className="surface flex items-center justify-between gap-3 rounded-xl p-3">
+              <div className="min-w-0">
+                <p className="truncate text-sm text-foreground">{t.title}</p>
+                <p className="truncate text-xs text-muted-foreground">{t.category}</p>
+              </div>
+              <div className="flex shrink-0 gap-1">
+                <IconBtn onClick={() => setPreview(t)} title="Preview"><Eye className="size-3.5" /></IconBtn>
+                <IconBtn onClick={() => setEditing(t)} title="Edit"><MessageCircle className="size-3.5" /></IconBtn>
+                <IconBtn onClick={() => duplicate(t.id)} title="Duplicate"><Copy className="size-3.5" /></IconBtn>
+                <IconBtn onClick={() => remove(t.id)} title="Delete" destructive><Trash2 className="size-3.5" /></IconBtn>
+              </div>
+            </div>
+          ))}
+          {list.length === 0 && <p className="py-8 text-center text-sm text-muted-foreground">No templates yet.</p>}
+        </div>
+      )}
+
+      {editing && (
+        <ModalShell title={editing.id ? "Edit template" : "New template"} onClose={() => setEditing(null)}>
+          <InboxTemplateForm
+            template={editing}
+            onSaved={async () => {
+              setEditing(null);
+              await refresh();
+            }}
+          />
+        </ModalShell>
+      )}
+
+      {preview && (
+        <ModalShell title="Preview" onClose={() => setPreview(null)}>
+          <div className="surface rounded-xl bg-brand/[0.06] p-4 ring-1 ring-brand/20">
+            <p className="text-sm font-medium text-foreground">{preview.title}</p>
+            <p className="mt-1 whitespace-pre-line text-xs text-muted-foreground">{preview.body}</p>
+            {preview.ctaLabel && (
+              <p className="mt-2 text-xs font-medium text-brand">{preview.ctaLabel}</p>
+            )}
+          </div>
+        </ModalShell>
+      )}
+    </div>
+  );
+}
+
+function IconBtn({
+  children,
+  onClick,
+  title,
+  destructive,
+}: {
+  children: React.ReactNode;
+  onClick: () => void;
+  title: string;
+  destructive?: boolean;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      title={title}
+      className={cn(
+        "grid size-7 place-items-center rounded-lg text-muted-foreground transition-colors hover:bg-accent",
+        destructive && "hover:bg-destructive/10 hover:text-destructive",
+      )}
+    >
+      {children}
+    </button>
+  );
+}
+
+function InboxTemplateForm({
+  template,
+  onSaved,
+}: {
+  template: InboxTemplate;
+  onSaved: () => void;
+}) {
+  const [title, setTitle] = useState(template.title);
+  const [body, setBody] = useState(template.body);
+  const [category, setCategory] = useState(template.category);
+  const [ctaLabel, setCtaLabel] = useState(template.ctaLabel ?? "");
+  const [ctaUrl, setCtaUrl] = useState(template.ctaUrl ?? "");
+  const [priority, setPriority] = useState(template.priority);
+  const [saving, setSaving] = useState(false);
+
+  async function save() {
+    if (title.trim().length < 2 || body.trim().length < 2) {
+      toast("Add a title and body.", "error");
+      return;
+    }
+    setSaving(true);
+    try {
+      await adminSaveInboxTemplate({
+        id: template.id || undefined,
+        title,
+        body,
+        category,
+        ctaLabel: ctaLabel || undefined,
+        ctaUrl: ctaUrl || undefined,
+        priority: priority as never,
+      });
+      toast("Template saved.", "success");
+      onSaved();
+    } catch {
+      toast("Couldn't save template.", "error");
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  return (
+    <div className="space-y-3">
+      <input
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+        placeholder="Title"
+        className="h-9 w-full rounded-lg border border-border bg-background px-3 text-sm text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      />
+      <textarea
+        value={body}
+        onChange={(e) => setBody(e.target.value)}
+        rows={3}
+        placeholder="Body"
+        className="w-full resize-none rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      />
+      <div className="grid grid-cols-2 gap-2">
+        <input
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+          placeholder="Category"
+          className="h-9 rounded-lg border border-border bg-background px-3 text-sm text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        />
+        <select value={priority} onChange={(e) => setPriority(e.target.value)} className={selectCls}>
+          {["low", "normal", "high"].map((p) => (
+            <option key={p} value={p}>{p}</option>
+          ))}
+        </select>
+      </div>
+      <div className="grid grid-cols-2 gap-2">
+        <input
+          value={ctaLabel}
+          onChange={(e) => setCtaLabel(e.target.value)}
+          placeholder="CTA label"
+          className="h-9 rounded-lg border border-border bg-background px-3 text-sm text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        />
+        <input
+          value={ctaUrl}
+          onChange={(e) => setCtaUrl(e.target.value)}
+          placeholder="CTA URL"
+          className="h-9 rounded-lg border border-border bg-background px-3 text-sm text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        />
+      </div>
+      <div className="flex justify-end">
+        <button
+          type="button"
+          onClick={save}
+          disabled={saving}
+          className="inline-flex h-9 items-center rounded-lg bg-foreground px-4 text-sm font-medium text-background disabled:opacity-60"
+        >
+          {saving ? "Saving…" : "Save"}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+type EmailTemplate = { id: string; key: string; subject: string; description: string | null };
+
+function EmailTemplatesSection() {
+  const { data, loading } = useAsync(() => adminListEmailTemplates());
+  const [preview, setPreview] = useState<EmailTemplate | null>(null);
+  const [mode, setMode] = useState<"single" | "selected" | "all">("single");
+  const [selected, setSelected] = useState<Recipient[]>([]);
+  const [sending, setSending] = useState(false);
+  const list = data as EmailTemplate[] | null;
+
+  async function send() {
+    if (mode !== "all" && selected.length === 0) {
+      toast("Choose at least one recipient.", "error");
+      return;
+    }
+    setSending(true);
+    try {
+      const res = await adminSendEmail({ mode, userIds: selected.map((s) => s.id) });
+      toast(`Queued for ${res.count} recipient${res.count === 1 ? "" : "s"}.`, "success");
+      setSelected([]);
+    } catch {
+      toast("Couldn't send email.", "error");
+    } finally {
+      setSending(false);
+    }
+  }
+
+  if (!list) return <SectionState loading={loading} />;
+
+  return (
+    <div className="space-y-4">
+      <div className="space-y-2">
+        {list.map((t) => (
+          <div key={t.id} className="surface flex items-center justify-between gap-3 rounded-xl p-3">
+            <div className="min-w-0">
+              <p className="truncate text-sm text-foreground">{t.subject}</p>
+              <p className="truncate text-xs text-muted-foreground">{t.description ?? t.key}</p>
+            </div>
+            <IconBtn onClick={() => setPreview(t)} title="Preview"><Eye className="size-3.5" /></IconBtn>
+          </div>
+        ))}
+      </div>
+
+      <div className="surface max-w-lg space-y-3 rounded-xl p-4">
+        <p className="text-xs font-medium text-muted-foreground">Send welcome email</p>
+        <RecipientPicker mode={mode} setMode={setMode} selected={selected} setSelected={setSelected} />
+        <div className="flex justify-end">
+          <button
+            type="button"
+            onClick={send}
+            disabled={sending}
+            className="inline-flex h-9 items-center gap-1.5 rounded-lg bg-foreground px-4 text-sm font-medium text-background disabled:opacity-60"
+          >
+            <Mail className="size-4" />
+            {sending ? "Sending…" : "Send"}
+          </button>
+        </div>
+        <p className="text-[11px] text-muted-foreground">
+          Delivery uses the mock provider until RESEND_API_KEY is configured; attempts
+          are still logged in Delivery Logs.
+        </p>
+      </div>
+
+      {preview && (
+        <ModalShell title={preview.subject} onClose={() => setPreview(null)}>
+          <p className="text-sm text-muted-foreground">
+            Rendered with React Email. Full HTML preview is available once the
+            template is sent (see Delivery Logs) or via the Resend dashboard once
+            configured.
+          </p>
+        </ModalShell>
+      )}
+    </div>
+  );
+}
+
+function BroadcastSection() {
+  const [title, setTitle] = useState("");
+  const [body, setBody] = useState("");
+  const [deliveryType, setDeliveryType] = useState<"inbox" | "email" | "both">("inbox");
+  const [creating, setCreating] = useState(false);
+  const emailDisabled = true; // no RESEND_API_KEY wired client-side; server enforces regardless
+
+  async function create(published: boolean) {
+    if (title.trim().length < 2 || body.trim().length < 2) {
+      toast("Add a title and body.", "error");
+      return;
+    }
+    setCreating(true);
+    try {
+      await adminCreateBroadcast({ title, body, deliveryType, published });
+      toast(published ? "Announcement published." : "Broadcast saved as draft.", "success");
+      setTitle("");
+      setBody("");
+    } catch {
+      toast("Couldn't create broadcast.", "error");
+    } finally {
+      setCreating(false);
+    }
+  }
+
+  return (
+    <div className="surface max-w-lg space-y-3 rounded-xl p-4">
+      <input
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+        placeholder="Title"
+        className="h-9 w-full rounded-lg border border-border bg-background px-3 text-sm text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      />
+      <textarea
+        value={body}
+        onChange={(e) => setBody(e.target.value)}
+        rows={3}
+        placeholder="Body"
+        className="w-full resize-none rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      />
+      <div className="flex items-center gap-2">
+        {(["inbox", "email", "both"] as const).map((d) => (
+          <button
+            key={d}
+            type="button"
+            onClick={() => setDeliveryType(d)}
+            disabled={(d === "email" || d === "both") && emailDisabled}
+            className={cn(
+              "rounded-lg px-2.5 py-1 text-xs capitalize transition-colors disabled:cursor-not-allowed disabled:opacity-40",
+              deliveryType === d ? "bg-accent text-foreground" : "text-muted-foreground hover:text-foreground",
+            )}
+          >
+            {d}
+            {(d === "email" || d === "both") && emailDisabled ? " (disabled)" : ""}
+          </button>
+        ))}
+      </div>
+      <p className="text-[11px] text-muted-foreground">
+        Inbox delivery is active immediately. Email delivery stays disabled until
+        RESEND_API_KEY is configured.
+      </p>
+      <div className="flex justify-end gap-2">
+        <button
+          type="button"
+          onClick={() => create(false)}
+          disabled={creating}
+          className="inline-flex h-9 items-center rounded-lg border border-border px-3 text-sm text-foreground disabled:opacity-60"
+        >
+          Save draft
+        </button>
+        <button
+          type="button"
+          onClick={() => create(true)}
+          disabled={creating}
+          className="inline-flex h-9 items-center rounded-lg bg-foreground px-4 text-sm font-medium text-background disabled:opacity-60"
+        >
+          Publish
+        </button>
+      </div>
+    </div>
+  );
+}
+
+type MailLog = { id: string; recipient: string; subject: string; template: string; status: string; error: string | null; sentAt: string };
+type InboxDelivery = { id: string; userId: string; title: string; type: string; createdAt: string };
+
+function DeliveryLogsSection() {
+  const [view, setView] = useState<"email" | "inbox">("email");
+  const [mail, setMail] = useState<MailLog[] | null>(null);
+  const [inbox, setInbox] = useState<InboxDelivery[] | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [query, setQuery] = useState("");
+
+  useEffect(() => {
+    let active = true;
+    if (view === "email") {
+      adminMailLogs(0)
+        .then((d) => active && setMail(d as MailLog[]))
+        .catch(() => {})
+        .finally(() => active && setLoading(false));
+    } else {
+      adminInboxDeliveries(0)
+        .then((d) => active && setInbox(d as InboxDelivery[]))
+        .catch(() => {})
+        .finally(() => active && setLoading(false));
+    }
+    return () => {
+      active = false;
+    };
+  }, [view]);
+
+  const filteredMail = mail?.filter(
+    (m) => !query || m.recipient.toLowerCase().includes(query.toLowerCase()) || m.subject.toLowerCase().includes(query.toLowerCase()),
+  );
+  const filteredInbox = inbox?.filter((i) => !query || i.title.toLowerCase().includes(query.toLowerCase()));
+
+  return (
+    <div className="space-y-3">
+      <div className="flex items-center gap-2">
+        <button
+          type="button"
+          onClick={() => {
+            setLoading(true);
+            setView("email");
+          }}
+          className={cn("rounded-lg px-2.5 py-1 text-xs transition-colors", view === "email" ? "bg-accent text-foreground" : "text-muted-foreground hover:text-foreground")}
+        >
+          Email deliveries
+        </button>
+        <button
+          type="button"
+          onClick={() => {
+            setLoading(true);
+            setView("inbox");
+          }}
+          className={cn("rounded-lg px-2.5 py-1 text-xs transition-colors", view === "inbox" ? "bg-accent text-foreground" : "text-muted-foreground hover:text-foreground")}
+        >
+          Inbox deliveries
+        </button>
+        <div className="ml-auto flex items-center gap-2 rounded-lg border border-border bg-background px-2.5">
+          <Search className="size-3.5 text-muted-foreground" />
+          <input
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Search"
+            className="h-8 bg-transparent text-xs text-foreground outline-none placeholder:text-muted-foreground/60"
+          />
+        </div>
+      </div>
+
+      <div className="surface overflow-hidden rounded-xl">
+        <div className="overflow-x-auto">
+          {view === "email" ? (
+            <table className="w-full text-left text-xs">
+              <thead className="text-muted-foreground">
+                <tr className="border-b border-border">
+                  <th className="px-3 py-2 font-medium">Recipient</th>
+                  <th className="px-3 py-2 font-medium">Template</th>
+                  <th className="px-3 py-2 font-medium">Status</th>
+                  <th className="px-3 py-2 font-medium">Sent</th>
+                  <th className="px-3 py-2 font-medium">Error</th>
+                </tr>
+              </thead>
+              <tbody>
+                {loading ? (
+                  <tr><td colSpan={5} className="px-3 py-10 text-center text-muted-foreground"><Loader2 className="mx-auto size-4 animate-spin" /></td></tr>
+                ) : (
+                  filteredMail?.map((m) => (
+                    <tr key={m.id} className="border-b border-border/60">
+                      <td className="px-3 py-2 text-foreground">{m.recipient}</td>
+                      <td className="px-3 py-2"><Badge>{m.template}</Badge></td>
+                      <td className="px-3 py-2"><Badge>{m.status}</Badge></td>
+                      <td className="px-3 py-2 text-muted-foreground">{fmtDate(m.sentAt)}</td>
+                      <td className="max-w-[200px] truncate px-3 py-2 text-muted-foreground">{m.error ?? "—"}</td>
+                    </tr>
+                  ))
+                )}
+                {!loading && filteredMail?.length === 0 && (
+                  <tr><td colSpan={5} className="px-3 py-10 text-center text-muted-foreground">No email deliveries yet.</td></tr>
+                )}
+              </tbody>
+            </table>
+          ) : (
+            <table className="w-full text-left text-xs">
+              <thead className="text-muted-foreground">
+                <tr className="border-b border-border">
+                  <th className="px-3 py-2 font-medium">Title</th>
+                  <th className="px-3 py-2 font-medium">Type</th>
+                  <th className="px-3 py-2 font-medium">Sent</th>
+                </tr>
+              </thead>
+              <tbody>
+                {loading ? (
+                  <tr><td colSpan={3} className="px-3 py-10 text-center text-muted-foreground"><Loader2 className="mx-auto size-4 animate-spin" /></td></tr>
+                ) : (
+                  filteredInbox?.map((i) => (
+                    <tr key={i.id} className="border-b border-border/60">
+                      <td className="px-3 py-2 text-foreground">{i.title}</td>
+                      <td className="px-3 py-2"><Badge>{i.type}</Badge></td>
+                      <td className="px-3 py-2 text-muted-foreground">{fmtDate(i.createdAt)}</td>
+                    </tr>
+                  ))
+                )}
+                {!loading && filteredInbox?.length === 0 && (
+                  <tr><td colSpan={3} className="px-3 py-10 text-center text-muted-foreground">No inbox deliveries yet.</td></tr>
+                )}
+              </tbody>
+            </table>
+          )}
+        </div>
+      </div>
+    </div>
   );
 }

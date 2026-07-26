@@ -6,6 +6,7 @@ import { Toaster } from "@/components/ui/toast";
 import { GitHubReturnToast } from "@/components/workspace/github-return-toast";
 import { AchievementWatcher } from "@/components/achievements/achievement-watcher";
 import { SupportPanel } from "@/components/support/support-panel";
+import { InboxPanel } from "@/components/inbox/inbox-panel";
 
 type SessionUser = {
   name?: string | null;
@@ -52,6 +53,7 @@ export function AppShell({
       <GitHubReturnToast />
       <AchievementWatcher />
       <SupportPanel />
+      <InboxPanel />
     </div>
   );
 }

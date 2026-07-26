@@ -2,9 +2,12 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LifeBuoy } from "lucide-react";
+import { useEffect, useState } from "react";
+import { LifeBuoy, Bell } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { openSupport } from "@/components/support/support-panel";
+import { openInbox, INBOX_UNREAD_EVENT } from "@/components/inbox/inbox-panel";
+import { getMyUnreadCount } from "@/lib/notifications/actions";
 import { bottomNavItems } from "./nav-items";
 
 /**
@@ -13,6 +16,16 @@ import { bottomNavItems } from "./nav-items";
  */
 export function BottomNav() {
   const pathname = usePathname();
+  const [unread, setUnread] = useState(0);
+
+  useEffect(() => {
+    function refresh() {
+      getMyUnreadCount().then(setUnread).catch(() => {});
+    }
+    refresh();
+    window.addEventListener(INBOX_UNREAD_EVENT, refresh);
+    return () => window.removeEventListener(INBOX_UNREAD_EVENT, refresh);
+  }, []);
 
   return (
     <nav
@@ -41,6 +54,21 @@ export function BottomNav() {
             </li>
           );
         })}
+        <li className="flex-1">
+          <button
+            type="button"
+            onClick={openInbox}
+            className="flex w-full flex-col items-center gap-1 px-1 py-2.5 text-[11px] text-muted-foreground transition-colors hover:text-foreground"
+          >
+            <span className="relative">
+              <Bell className="size-5" />
+              {unread > 0 && (
+                <span className="absolute -right-0.5 -top-0.5 size-2 rounded-full bg-brand" />
+              )}
+            </span>
+            <span className="truncate">Inbox</span>
+          </button>
+        </li>
         <li className="flex-1">
           <button
             type="button"
