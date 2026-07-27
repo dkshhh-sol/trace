@@ -1,20 +1,35 @@
-import { MonitorPlay, ListChecks, LineChart } from "lucide-react";
+import { ListChecks, Code2, GitCommit, LineChart, Target, RotateCcw } from "lucide-react";
 
 const pillars = [
   {
-    icon: MonitorPlay,
-    title: "Watch inside Trace",
-    body: "Every problem is mapped to its lecture. Watch it embedded, right next to the problem. No new tabs, no hunting through playlists.",
+    icon: ListChecks,
+    title: "Lecture + Problem Mapping",
+    body: "Every Striver lecture is connected to its exact LeetCode and GFG problem. 449 problems, zero manual searching.",
   },
   {
-    icon: ListChecks,
-    title: "The whole sheet, organized",
-    body: "All 450+ problems in Striver's order, with LeetCode and GeeksforGeeks links one click away. Solve, then tick it off.",
+    icon: Code2,
+    title: "Built-in IDE",
+    body: "Solve in C, C++, Java or Python without leaving Trace. Resize the editor beside the lecture, save your code, and reopen it later.",
+  },
+  {
+    icon: GitCommit,
+    title: "GitHub Sync",
+    body: "Connect GitHub once, then commit your solution directly from the editor with one click. No copying, no Git terminal.",
   },
   {
     icon: LineChart,
-    title: "Progress that follows you",
-    body: "Your solved problems and place in the sheet are saved to your account and synced everywhere. Trace always knows what's next.",
+    title: "Progress Tracking",
+    body: "A GitHub-style activity graph, streaks and analytics that show exactly how consistent you've been.",
+  },
+  {
+    icon: Target,
+    title: "Goals & Consistency",
+    body: "Daily, weekly and monthly targets with automatic progress tracking, so you always know what's left.",
+  },
+  {
+    icon: RotateCcw,
+    title: "Resume Anywhere",
+    body: "Trace remembers exactly where you stopped, down to the problem and the code you were writing.",
   },
 ];
 
@@ -24,9 +39,9 @@ export function WhyTrace() {
       <div className="mx-auto max-w-2xl text-center">
         <p className="text-sm font-medium text-brand">Why Trace</p>
         <h2 className="mt-3 text-3xl tracking-tight sm:text-4xl">
-          One workspace,{" "}
+          Not another sheet,{" "}
           <span className="font-serif italic text-muted-foreground">
-            not five tabs
+            a full workspace
           </span>
         </h2>
       </div>

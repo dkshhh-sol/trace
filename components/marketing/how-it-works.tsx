@@ -2,17 +2,17 @@ const steps = [
   {
     step: "01",
     title: "Open the sheet",
-    body: "Sign in with Google and open Striver A2Z. Trace drops you exactly at your next unsolved problem.",
+    body: "Sign in with Google and open Striver A2Z. Trace drops you exactly at your next unsolved problem, lecture already mapped.",
   },
   {
     step: "02",
-    title: "Watch & solve",
-    body: "Watch the mapped lecture embedded in Trace, then jump to LeetCode or GeeksforGeeks to solve it.",
+    title: "Watch, code, commit",
+    body: "Watch the lecture beside a resizable built-in editor for C, C++, Java or Python. Solve, save, and commit to GitHub in one click.",
   },
   {
     step: "03",
     title: "Track & continue",
-    body: "Mark it done, and your progress saves to your account while Trace surfaces the next problem automatically.",
+    body: "Mark it done, and your progress, streak and goals update automatically while Trace surfaces the next problem.",
   },
 ];
 
@@ -29,8 +29,8 @@ export function HowItWorks() {
             </span>
           </h2>
           <p className="mt-4 text-muted-foreground">
-            Three steps, one workspace. No tab-switching between lectures,
-            problems and a spreadsheet.
+            Three steps, one workspace. Lectures, a built-in code editor and
+            GitHub commits, all without switching tabs or tools.
           </p>
         </div>
 

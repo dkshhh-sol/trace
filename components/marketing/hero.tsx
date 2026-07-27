@@ -138,7 +138,7 @@ export function Hero({ isAuthed }: { isAuthed: boolean }) {
             style={{ color: SECONDARY, animationDelay: "0.05s" }}
           >
             <span className="size-1.5 rounded-full bg-[#8B7DFF] shadow-[0_0_8px_#8B7DFF]" />
-            Built for consistent developers
+            The complete interview-prep workspace
           </div>
 
           {/* Heading — Instrument Serif */}
@@ -146,9 +146,9 @@ export function Hero({ isAuthed }: { isAuthed: boolean }) {
             className="hero-rise mx-auto mt-7 max-w-4xl text-balance text-5xl font-normal leading-[1.05] tracking-tight text-white sm:text-6xl md:text-7xl"
             style={{ ...SERIF, animationDelay: "0.12s" }}
           >
-            Master DSA.
+            Finish Striver A2Z.
             <br />
-            <span className="text-white/90">One problem at a time.</span>
+            <span className="text-white/90">Stay consistent. Track everything.</span>
           </h1>
 
           {/* Supporting paragraph */}
@@ -156,9 +156,9 @@ export function Hero({ isAuthed }: { isAuthed: boolean }) {
             className="hero-rise mx-auto mt-6 max-w-2xl text-pretty text-base leading-relaxed sm:text-lg"
             style={{ color: SECONDARY, animationDelay: "0.2s" }}
           >
-            The complete workspace for mastering Striver&rsquo;s A2Z Sheet. Watch
-            lectures, solve problems, track progress, revise intelligently, and
-            stay consistent, all in one place.
+            449 problems, every lecture mapped, every LeetCode and GFG link ready.
+            Solve inside a built-in code editor and commit straight to GitHub in
+            one click, all without leaving Trace.
           </p>
 
           {/* Primary CTAs */}
@@ -182,14 +182,14 @@ export function Hero({ isAuthed }: { isAuthed: boolean }) {
             style={{ color: SECONDARY, animationDelay: "0.36s" }}
           >
             <span className="uppercase tracking-[0.18em] text-white/45">
-              Trusted by students preparing for
+              One click. No copying. No IDE switching.
             </span>
             <span className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-white/70">
-              <span>FAANG</span>
+              <span>449 problems mapped</span>
               <Dot />
-              <span>Product Companies</span>
+              <span>Built-in editor</span>
               <Dot />
-              <span>Placements</span>
+              <span>GitHub sync</span>
             </span>
           </div>
         </div>

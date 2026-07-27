@@ -14,12 +14,13 @@ export function CTA() {
             Finish{" "}
             <span className="font-serif italic text-gradient">
               Striver A2Z
-            </span>{" "}
-            without the chaos
+            </span>
+            . Stay consistent. Track everything.
           </h2>
           <p className="mx-auto mt-5 max-w-lg text-muted-foreground">
-            Lectures, problems, notes and progress in one focused workspace.
-            Start where you are, pick up where you left off.
+            Lectures, a built-in code editor, one-click GitHub commits and real
+            progress tracking, all in one focused workspace. Pick up exactly
+            where you left off.
           </p>
 
           <div className="mt-9 flex justify-center">
